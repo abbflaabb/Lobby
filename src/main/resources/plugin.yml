@@ -1,3 +1,16 @@
 name: Lobby
 version: '${project.version}'
 main: com.abbas.lobby.Lobby
+load: STARTUP
+authors: "abbas"
+description: "Lobby Plugin"
+
+commands:
+  kick:
+    desciption: kicks a player from the server
+  help:
+    description: Displays the Help Message
+  ping:
+    description: Displays the Players Ping
+  Support:
+    description: Displays the Support Message
