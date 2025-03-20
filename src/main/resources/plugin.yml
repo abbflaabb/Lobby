@@ -1,0 +1,3 @@
+name: Lobby
+version: '${project.version}'
+main: com.abbas.lobby.Lobby
