@@ -1,4 +1,4 @@
-package com.abbas.lobby.commands.AdminCommand;
+package com.abbas.lobby.commands.AdminCommands;
 
 import com.abbas.lobby.Utils.ColorUtils;
 import org.bukkit.Bukkit;
