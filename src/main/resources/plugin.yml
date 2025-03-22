@@ -19,3 +19,5 @@ commands:
     description:
   menu:
     description: Every
+  lobby:
+
