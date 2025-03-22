@@ -1,7 +1,7 @@
 package com.abbas.lobby;
 
 import com.abbas.lobby.Listeners.PlayerBlockBreakEvent;
-import com.abbas.lobby.Listeners.joinListener;
+import com.abbas.lobby.Listeners.JoinListener;
 import com.abbas.lobby.Scoreobard.ScoreBoardListener;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
@@ -37,6 +37,7 @@ public final class Lobby extends JavaPlugin {
         getCommand("vanish").setExecutor(new Vanish());
         getCommand("Discord").setExecutor(new Discord());
         getCommand("menu").setExecutor(new openMenuCommand());
+        getCommand("lobby").setExecutor(new lobby());
     }
 
     public void listeners(){
@@ -44,7 +45,7 @@ public final class Lobby extends JavaPlugin {
         p.registerEvents(new ScoreBoardListener(this), this);
         p.registerEvents(new PlayerBlockBreakEvent(), this);
         p.registerEvents(new MenuGamesListener(), this);
-        p.registerEvents(new joinListener(), this);
+        p.registerEvents(new JoinListener(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         p.registerEvents(new MenuGamesListener(), this);
     }
