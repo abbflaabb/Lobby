@@ -2,10 +2,11 @@ name: Lobby
 version: '${project.version}'
 main: com.abbas.lobby.Lobby
 load: STARTUP
-authors: "abbas"
 description: "Lobby Plugin"
 
 commands:
+  vanish:
+    description: become invisible to normal players
   kick:
     desciption: kicks a player from the server
   help:
@@ -14,3 +15,7 @@ commands:
     description: Displays the Players Ping
   Support:
     description: Displays the Support Message
+  Discord:
+    description:
+  menu:
+    description: Every
