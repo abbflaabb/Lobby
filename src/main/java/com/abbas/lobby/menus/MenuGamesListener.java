@@ -1,5 +1,4 @@
 package com.abbas.lobby.menus;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
