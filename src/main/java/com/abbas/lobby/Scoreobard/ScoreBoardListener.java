@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.abbas.lobby.Scoreobard;
 
 import com.abbas.lobby.Lobby;
@@ -15,12 +20,12 @@ public class ScoreBoardListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        boardManager.setScoreboard(event.getPlayer());
-        boardManager.updateScoreboard();
+        this.boardManager.setScoreboard(event.getPlayer());
+        this.boardManager.updateScoreboard();
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        boardManager.updateScoreboard();
+        this.boardManager.updateScoreboard();
     }
 }
