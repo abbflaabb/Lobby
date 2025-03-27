@@ -7,10 +7,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class Vanish implements CommandExecutor {
     private Lobby plugin;
+
+    public Vanish(Lobby plugin) {
+        this.plugin = plugin;
+    }// okay see A Ban Command And Config!!!!!!
+    // yes
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -19,7 +23,7 @@ public class Vanish implements CommandExecutor {
                 Player player = (Player) sender;
                 if(player.hasPermission("lobby.vanish")) {
                     if(plugin.vanish_list.contains(player)) {
-                        for (Player people: Bukkit.getOnlinePlayers()) {
+                        for (Player people: Bukkit.getOnlinePlayers()) { // Add Vanish List
                             people.showPlayer(player);
                         }
                         plugin.vanish_list.remove(player);
