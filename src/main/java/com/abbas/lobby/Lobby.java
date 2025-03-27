@@ -1,8 +1,11 @@
 package com.abbas.lobby;
 
-import com.abbas.lobby.Listeners.PlayerBlockBreakEvent;
-import com.abbas.lobby.Listeners.JoinListener;
+import com.abbas.lobby.Listeners.*;
+import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
 import com.abbas.lobby.Scoreobard.ScoreBoardListener;
+import com.abbas.lobby.Utils.BanConfig;
+import com.abbas.lobby.Utils.Config;
+import com.abbas.lobby.Utils.UnbanConfig;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
 import com.abbas.lobby.menus.MenuGamesListener;
@@ -17,7 +20,6 @@ import java.util.logging.Logger;
 
 public final class Lobby extends JavaPlugin {
     private final Logger logger = getLogger();
-    private static Lobby instance;
     public ArrayList<Player> vanish_list = new ArrayList<>();
 
     @Override
@@ -25,7 +27,10 @@ public final class Lobby extends JavaPlugin {
         logger.info("Lobby plugin Enabled");
         addcommands();
         listeners();
-        instance = this;
+        Config.setup();
+        UnbanConfig.setupConfig();
+        BanConfig.setupConfig();
+        ScoreBoardConfig.setupConfig();
 
     }
 
@@ -34,31 +39,38 @@ public final class Lobby extends JavaPlugin {
         getCommand("help").setExecutor(new help());
         getCommand("kick").setExecutor(new Kick());
         getCommand("support").setExecutor(new Support());
-        getCommand("vanish").setExecutor(new Vanish());
+        getCommand("vanish").setExecutor(new Vanish(this));
         getCommand("Discord").setExecutor(new Discord());
         getCommand("menu").setExecutor(new openMenuCommand());
         getCommand("lobby").setExecutor(new lobby());
-    }
+        getCommand("SetSpawn").setExecutor(new SetSpawn());
+        getCommand("Spawn").setExecutor(new Spawn());
+        getCommand("Ban").setExecutor(new Ban());
+        getCommand("UnBan").setExecutor(new Unban());
+        getCommand("reloadconfig").setExecutor(new ReloadConfigs());
+    } // you dont Create Vanish Listener
 
     public void listeners(){
         PluginManager p = Bukkit.getPluginManager();
-        p.registerEvents(new ScoreBoardListener(this), this);
         p.registerEvents(new PlayerBlockBreakEvent(), this);
+        p.registerEvents(new ScoreBoardListener(this), this);
         p.registerEvents(new MenuGamesListener(), this);
         p.registerEvents(new JoinListener(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         p.registerEvents(new MenuGamesListener(), this);
+        p.registerEvents(new BlockPlace(), this);
+        p.registerEvents(new DropEvent(), this);
+        p.registerEvents(new ReSpawnListener(), this);
+        getServer().getPluginManager().registerEvents(new BanListener(), this);
+
     }
+
+
 
     @Override
     public void onDisable() {
         logger.info("Lobby plugin Disabled");
-        instance = null;
 
-    }
-
-    public static Lobby getInstance() {
-        return instance;
     }
 
 }
