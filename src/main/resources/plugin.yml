@@ -3,6 +3,7 @@ version: '${project.version}'
 main: com.abbas.lobby.Lobby
 load: STARTUP
 description: "Lobby Plugin"
+api-version: 1.13
 
 commands:
   vanish:
@@ -20,4 +21,12 @@ commands:
   menu:
     description: Every
   lobby:
-
+  SetSpawn:
+    description: Sets the spawn point
+    permission: lobby.setspawn
+  Spawn:
+    description: Teleports to the spawn point
+    permission: lobby.spawn
+  Ban:
+  UnBan:
+  reloadconfig:
