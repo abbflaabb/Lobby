@@ -71,7 +71,6 @@ public class MenuGames {
                         "",
                 }));
 
-        // Information Book
         menu.setItem(31, createMenuItem(Material.BOOK,
                 ChatColor.YELLOW + "Information",
                 new String[]{
@@ -80,7 +79,6 @@ public class MenuGames {
                         ChatColor.GRAY + "Online Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size()
                 }));
 
-        // Close Button
         menu.setItem(35, createMenuItem(Material.BARRIER,
                 ChatColor.RED + "Close Menu",
                 new String[]{
@@ -89,7 +87,6 @@ public class MenuGames {
                         ChatColor.WHITE + "Current User's Login: " + ChatColor.YELLOW + player.getName()
                 }));
 
-        // Fill empty slots with glass panes
         ItemStack filler = createMenuItem(Material.STAINED_GLASS_PANE, " ", new String[]{});
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (menu.getItem(i) == null) {
@@ -114,10 +111,4 @@ public class MenuGames {
         item.setItemMeta(meta);
         return item;
     }
-
-    // Utility method to get formatted time string
-    public static String getFormattedTime() {
-        return dateFormat.format(new Date());
-    }
-
 }
