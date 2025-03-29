@@ -8,6 +8,7 @@ import com.abbas.lobby.Utils.Config;
 import com.abbas.lobby.Utils.UnbanConfig;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
+import com.abbas.lobby.commands.PlayerCommands.premuimCommands.FlyCommand;
 import com.abbas.lobby.menus.MenuGamesListener;
 import com.abbas.lobby.menus.command.openMenuCommand;
 import org.bukkit.Bukkit;
@@ -31,7 +32,6 @@ public final class Lobby extends JavaPlugin {
         UnbanConfig.setupConfig();
         BanConfig.setupConfig();
         ScoreBoardConfig.setupConfig();
-
     }
 
     public void addcommands(){
@@ -48,6 +48,7 @@ public final class Lobby extends JavaPlugin {
         getCommand("Ban").setExecutor(new Ban());
         getCommand("UnBan").setExecutor(new Unban());
         getCommand("reloadconfig").setExecutor(new ReloadConfigs());
+        getCommand("fly").setExecutor(new FlyCommand());
     } // you dont Create Vanish Listener
 
     public void listeners(){
