@@ -30,3 +30,14 @@ commands:
   Ban:
   UnBan:
   reloadconfig:
+  fly:
+    description: Toggle fly mode
+    usage: /fly [high]
+    permission: lobby.fly
+  permissions:
+    lobby.fly:
+      description: Allows the player to use /fly
+      default: op
+    lobby.fly.high:
+      description: Allows the player to use high-speed flight mode (/fly high)
+      default: op
