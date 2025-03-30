@@ -30,10 +30,21 @@ commands:
   Ban:
   UnBan:
   reloadconfig:
+  warn:
   fly:
     description: Toggle fly mode
     usage: /fly [high]
     permission: lobby.fly
+  information:
+    description: Display server information and rules
+    aliases: [info]
+    permission: lobby.information  
+  mute:
+  unmute:
+    description: Unmute a player
+    permission: lobby.unmute
+  checkban:
+
   permissions:
     lobby.fly:
       description: Allows the player to use /fly
