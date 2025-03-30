@@ -12,12 +12,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Ban implements CommandExecutor {
 
+    private static Map<String, String> banIds = new HashMap<>();
+
     public Ban() {
         BanConfig.setupConfig();
+        loadBanIds();
         startBanExpirationChecker();
     }
 
@@ -40,6 +46,7 @@ public class Ban implements CommandExecutor {
                 sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("banMessages.ban.playerNotFound")));
                 return true;
             }
+
             long duration = -1;
             String reason = "Hacking";
 
@@ -54,19 +61,48 @@ public class Ban implements CommandExecutor {
                 }
             }
 
+            String banId = generateBanId();
+
+            banIds.put(targetName.toLowerCase(), banId);
+            saveBanId(targetName.toLowerCase(), banId);
+
             Date expires = (duration > 0) ? new Date(System.currentTimeMillis() + duration) : null;
             Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(targetName, reason, expires, sender.getName());
 
-            String banMessage = formatBanMessage(reason, expires);
+            String banMessage = formatBanMessage(reason, expires, banId);
             target.kickPlayer(ColorUtils.translateColorCodes(banMessage));
 
             String senderMessage = Config.getConfig().getString("banMessages.ban.success")
                     .replace("%player%", targetName)
-                    .replace("%reason%", reason);
+                    .replace("%reason%", reason)
+                    .replace("%ban_id%", banId);
             sender.sendMessage(ColorUtils.translateColorCodes(senderMessage));
             return true;
         }
         return false;
+    }
+
+    private String generateBanId() {
+        return "BAN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    private void saveBanId(String playerName, String banId) {
+        Config.getConfig().set("banIds." + playerName, banId);
+        Config.save();
+    }
+
+    private void loadBanIds() {
+        if (Config.getConfig().isConfigurationSection("banIds")) {
+            for (String playerName : Config.getConfig().getConfigurationSection("banIds").getKeys(false)) {
+                banIds.put(playerName, Config.getConfig().getString("banIds." + playerName));
+            }
+        }
+    }
+
+    private void removeBanId(String playerName) {
+        banIds.remove(playerName.toLowerCase());
+        Config.getConfig().set("banIds." + playerName.toLowerCase(), null);
+        Config.save();
     }
 
     private long parseDuration(String durationStr) throws NumberFormatException {
@@ -81,14 +117,15 @@ public class Ban implements CommandExecutor {
         }
     }
 
-    private String formatBanMessage(String reason, Date expires) {
+    private String formatBanMessage(String reason, Date expires, String banId) {
         String timeLeft = (expires != null) ? getTimeLeft(expires) : "Permanent";
         String forumLink = Config.getConfig().getString("banMessages.ban.forumLink");
 
         return "§c§lLobbyBan§7» §cBanned for " + reason + "\n"
                 + "§4§oBanned by CONSOLE\n\n"
                 + "§7It seems like you are using a hacked client, please disable it!\n"
-                + "§cUnban in §f> §e" + timeLeft + "\n\n"
+                + "§cUnban in §f> §e" + timeLeft + "\n"
+                + "§7Ban ID: §e" + banId + "\n\n"
                 + "§7Unban application in TS or forum\n"
                 + "§eTS-Ip§7 » §ccoming soon\n"
                 + forumLink;
@@ -113,6 +150,7 @@ public class Ban implements CommandExecutor {
                     Date expiration = entry.getExpiration();
                     if (expiration != null && expiration.before(new Date())) {
                         banList.pardon(entry.getTarget());
+                        removeBanId(entry.getTarget());
                         Bukkit.broadcastMessage(ColorUtils.translateColorCodes("&aBan for " + entry.getTarget() + " has expired."));
                     }
                 }
