@@ -20,7 +20,6 @@ public class Config {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                // Error handling
             }
         }
         Config = YamlConfiguration.loadConfiguration(file);
