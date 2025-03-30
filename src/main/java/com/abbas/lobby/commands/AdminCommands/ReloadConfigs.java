@@ -1,9 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
 import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
-import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.Utils.BanConfig;
-import com.abbas.lobby.Utils.UnbanConfig;
+import com.abbas.lobby.Utils.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +20,9 @@ public class ReloadConfigs implements CommandExecutor {
         BanConfig.setupConfig();
         UnbanConfig.setupConfig();
         ScoreBoardConfig.setupConfig();
+        ChatFilterConfig.setup();
+        MuteConfig.setupConfig();
+        WarnConfig.setupConfig();
         sender.sendMessage("§aConfiguration reloaded successfully.");
         return true;
     }
