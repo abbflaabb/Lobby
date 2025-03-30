@@ -17,7 +17,7 @@ import java.util.TimeZone;
 public class MenuGames {
 
     private static final String MENU_TITLE = ChatColor.DARK_AQUA + "Game Menu";
-    private static final int INVENTORY_SIZE = 36; // 4 rows
+    private static final int INVENTORY_SIZE = 36;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     static {
@@ -27,7 +27,6 @@ public class MenuGames {
     public static void openGameMenu(Player player) {
         Inventory menu = Bukkit.createInventory(null, INVENTORY_SIZE, MENU_TITLE);
 
-        // Time and Player Info Display (Clock item)
         ItemStack timeItem = new ItemStack(Material.WATCH);
         ItemMeta timeMeta = timeItem.getItemMeta();
         timeMeta.setDisplayName(ChatColor.GOLD + "Server Information");
@@ -38,8 +37,6 @@ public class MenuGames {
         timeItem.setItemMeta(timeMeta);
         menu.setItem(4, timeItem);
 
-        // Game Items
-        // PvP Arena
         menu.setItem(10, createMenuItem(Material.DIAMOND_SWORD,
                 ChatColor.RED + "PvP Arena",
                 new String[]{
@@ -47,7 +44,6 @@ public class MenuGames {
                         "",
                 }));
 
-        // SkyWars
         menu.setItem(12, createMenuItem(Material.GRASS,
                 ChatColor.AQUA + "SkyWars",
                 new String[]{
@@ -55,7 +51,6 @@ public class MenuGames {
                         "",
                 }));
 
-        // BedWars
         menu.setItem(14, createMenuItem(Material.BED,
                 ChatColor.LIGHT_PURPLE + "BedWars",
                 new String[]{
@@ -63,7 +58,6 @@ public class MenuGames {
                         "",
                 }));
 
-        // Survival Games
         menu.setItem(16, createMenuItem(Material.CHEST,
                 ChatColor.GOLD + "Survival Games",
                 new String[]{
