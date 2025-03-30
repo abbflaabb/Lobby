@@ -25,13 +25,25 @@ public class BanListener implements Listener {
             String reason = banEntry.getReason();
             String timeLeft = (expires != null) ? getTimeLeft(expires) : "Permanent";
 
-            // Get the customizable AdvancedBan message from the configuration
+            String banId = getBanIdForPlayer(playerName);
+            if (banId == null) {
+                banId = "Unknown";
+            }
+
             String kickMessage = Config.getConfig().getString("banMessages.ban.advancedBanMessage")
                     .replace("%reason%", reason)
-                    .replace("%timeLeft%", timeLeft);
+                    .replace("%timeLeft%", timeLeft)
+                    .replace("%ban_id%", banId);
 
             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, ColorUtils.translateColorCodes(kickMessage));
         }
+    }
+
+    private String getBanIdForPlayer(String playerName) {
+        if (Config.getConfig().contains("banIds." + playerName.toLowerCase())) {
+            return Config.getConfig().getString("banIds." + playerName.toLowerCase());
+        }
+        return null;
     }
 
     private String getTimeLeft(Date expires) {
