@@ -24,12 +24,10 @@ public class FlyCommand implements CommandExecutor {
             config.set("fly-messages.flyDisabled", "&cFly mode disabled!");
             config.set("fly-messages.flyHighEnabled", "&aHigh-Speed Fly mode enabled!");
             config.set("fly-messages.flyHighDisabled", "&cHigh-Speed Fly mode disabled!");
+            config.set("fly-messages.normalSpeed", 0.1);
+            config.set("fly-messages.highSpeed", 0.5);
         }
 
-        if (!config.isConfigurationSection("flight")) {
-            config.set("flight.normalSpeed", 0.1);
-            config.set("flight.highSpeed", 0.5);
-        }
 
         Config.save();
     }
@@ -46,7 +44,6 @@ public class FlyCommand implements CommandExecutor {
 
         boolean highMode = args.length > 0 && args[0].equalsIgnoreCase("high");
 
-        // Permission check
         if (highMode && !player.hasPermission("lobby.fly.high")) {
             player.sendMessage(ColorUtils.translateColorCodes(config.getString("fly-messages.noPermission", "&cYou do not have permission!")));
             return true;
@@ -56,17 +53,14 @@ public class FlyCommand implements CommandExecutor {
             return true;
         }
 
-        // Toggle flight mode
         boolean isFlying = player.getAllowFlight();
         player.setAllowFlight(!isFlying);
         player.setFlying(!isFlying);
 
-        // Set flight speed
-        float normalSpeed = (float) config.getDouble("flight.normalSpeed", 0.1);
-        float highSpeed = (float) config.getDouble("flight.highSpeed", 0.5);
+        float normalSpeed = (float) config.getDouble("fly-messages.normalSpeed", 0.1);
+        float highSpeed = (float) config.getDouble("fly-messages.highSpeed", 0.5);
         player.setFlySpeed(isFlying ? 0.1f : (highMode ? highSpeed : normalSpeed));
 
-        // Send feedback message
         String messageKey = isFlying
                 ? (highMode ? "fly-messages.flyHighDisabled" : "fly-messages.flyDisabled")
                 : (highMode ? "fly-messages.flyHighEnabled" : "fly-messages.flyEnabled");
