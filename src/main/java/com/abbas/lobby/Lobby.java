@@ -3,12 +3,8 @@ package com.abbas.lobby;
 import com.abbas.lobby.Listeners.*;
 import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
 import com.abbas.lobby.Scoreobard.ScoreBoardListener;
-import com.abbas.lobby.Utils.BanConfig;
-import com.abbas.lobby.Utils.ChatFilterConfig;
-import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.Utils.MuteConfig;
-import com.abbas.lobby.Utils.UnbanConfig;
-import com.abbas.lobby.Utils.WarnConfig;
+import com.abbas.lobby.Scoreobard.ScoreBoardManager;
+import com.abbas.lobby.Utils.*;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.premuimCommands.FlyCommand;
@@ -26,6 +22,7 @@ public final class Lobby extends JavaPlugin {
     private final Logger logger = getLogger();
     public ArrayList<Player> vanish_list = new ArrayList<>();
 
+
     @Override
     public void onEnable() {
         logger.info("Lobby plugin Enabled");
@@ -36,8 +33,8 @@ public final class Lobby extends JavaPlugin {
         BanConfig.setupConfig();
         ScoreBoardConfig.setupConfig();
         WarnConfig.setupConfig();
-        ChatFilterConfig.setup();
         MuteConfig.setupConfig();
+
     }
 
     public void addcommands(){
@@ -59,9 +56,8 @@ public final class Lobby extends JavaPlugin {
         getCommand("information").setExecutor(new InformationCommand());
         getCommand("mute").setExecutor(new MuteCommand());
         getCommand("unmute").setExecutor(new UnmuteCommand());
-        getCommand("checkban").setExecutor(new Ban());
-
-    } // you dont Create Vanish Listener
+        ScoreBoardManager boardManager = new ScoreBoardManager(this);
+        getCommand("sb").setExecutor(new ScoreBoardCommand(boardManager));    }
 
     public void listeners(){
         PluginManager p = Bukkit.getPluginManager();
@@ -75,7 +71,6 @@ public final class Lobby extends JavaPlugin {
         p.registerEvents(new DropEvent(), this);
         p.registerEvents(new ReSpawnListener(), this);
         p.registerEvents(new BanListener(), this);
-        p.registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new MuteChatListener(), this);
 
     }
