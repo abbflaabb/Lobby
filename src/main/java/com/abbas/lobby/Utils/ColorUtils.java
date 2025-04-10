@@ -23,7 +23,6 @@ public class ColorUtils {
         return newText.toString();
     }
 
-
     public static List<String> translateColorCodes(List<String> lines) {
         List<String> coloredLines = new ArrayList<>();
 
