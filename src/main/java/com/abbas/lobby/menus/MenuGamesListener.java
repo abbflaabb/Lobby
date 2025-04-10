@@ -69,12 +69,10 @@ public class MenuGamesListener implements Listener {
             e.printStackTrace();
         }
     }
-
     private void showInfo(Player player) {
         player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.5F, 1.0F);
         player.sendMessage("");
     }
-
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player)) {
