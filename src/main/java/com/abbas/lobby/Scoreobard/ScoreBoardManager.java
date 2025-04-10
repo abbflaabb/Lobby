@@ -1,48 +1,77 @@
 package com.abbas.lobby.Scoreobard;
 
 import com.abbas.lobby.Lobby;
+import com.abbas.lobby.Utils.ColorUtils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 
 public class ScoreBoardManager {
     private final Lobby plugin;
+    private static final int MAX_LINE_LENGTH = 40;
 
     public ScoreBoardManager(Lobby plugin) {
         this.plugin = plugin;
         ScoreBoardConfig.setupConfig();
+        LuckPermsRank.setup();
+
     }
 
     public void setScoreboard(Player player) {
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective obj = board.registerNewObjective("lobby", "dummy");
-        obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', ScoreBoardConfig.getConfig().getString("scoreboard.title", "&bYour Server Name")));
+
+        String title = PlaceholderAPI.setPlaceholders(player,
+                ScoreBoardConfig.getConfig().getString("scoreboard.title"));
+        obj.setDisplayName(ColorUtils.translateColorCodes(truncate(title)));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        Score space1 = obj.getScore("§1");
-        space1.setScore(6);
-        Score players = obj.getScore(ChatColor.WHITE + "Players: " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size());
-        players.setScore(5);
-        Score space2 = obj.getScore("§2");
-        space2.setScore(4);
-        String customLine = ChatColor.translateAlternateColorCodes('&', ScoreBoardConfig.getConfig().getString("scoreboard.customLine", "&eCustom Line"));
-        Score custom = obj.getScore(customLine);
-        custom.setScore(3);
-        Score space3 = obj.getScore("§3");
-        space3.setScore(2);
-        String website = ChatColor.translateAlternateColorCodes('&', ScoreBoardConfig.getConfig().getString("scoreboard.website", "&eyourwebsite.com"));
-        Score websiteScore = obj.getScore(website);
-        websiteScore.setScore(1);
+        String[] lines = ScoreBoardConfig.getConfig().getStringList("scoreboard.lines").toArray(new String[0]);
+        int score = lines.length;
+
+        for (String line : lines) {
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                line = PlaceholderAPI.setPlaceholders(player, line);
+            }
+            line = replacePlaceholders(line, player);
+            String coloredLine = ColorUtils.translateColorCodes(line);
+            String truncatedLine = truncate(coloredLine);
+
+            while (board.getEntries().contains(truncatedLine)) {
+                truncatedLine += "§r";
+                if (truncatedLine.length() > MAX_LINE_LENGTH) {
+                    truncatedLine = truncatedLine.substring(0, MAX_LINE_LENGTH);
+                }
+            }
+
+            Score lineScore = obj.getScore(truncatedLine);
+            lineScore.setScore(score--);
+        }
+
         player.setScoreboard(board);
+    }
+
+    private String truncate(String text) {
+        if (text.length() > MAX_LINE_LENGTH) {
+            return text.substring(0, MAX_LINE_LENGTH);
+        }
+        return text;
+    }
+
+
+    private String replacePlaceholders(String line, Player player) {
+        return line
+                .replace("%online_players%", String.valueOf(Bukkit.getOnlinePlayers().size()))
+                .replace("%player_name%", player.getName())
+                .replace("%Lobby_rank%", LuckPermsRank.getPlayerRank(player));
     }
 
     public void updateScoreboard() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            this.setScoreboard(player);
+            if (!player.getScoreboard().equals(Bukkit.getScoreboardManager().getMainScoreboard())) {
+                setScoreboard(player);
+            }
         }
     }
 }
