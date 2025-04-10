@@ -80,17 +80,14 @@ public class MenuGames {
                         "",
                         ChatColor.WHITE + "Current User's Login: " + ChatColor.YELLOW + player.getName()
                 }));
-
         ItemStack filler = createMenuItem(Material.STAINED_GLASS_PANE, " ", new String[]{});
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (menu.getItem(i) == null) {
                 menu.setItem(i, filler);
             }
         }
-
         player.openInventory(menu);
     }
-
     private static ItemStack createMenuItem(Material material, String name, String[] lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
