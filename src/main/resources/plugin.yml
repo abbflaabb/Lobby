@@ -4,7 +4,7 @@ main: com.abbas.lobby.Lobby
 load: STARTUP
 description: "Lobby Plugin"
 api-version: 1.13
-
+depend: [PlaceholderAPI, LuckPerms]
 commands:
   vanish:
     description: become invisible to normal players
@@ -43,9 +43,10 @@ commands:
   unmute:
     description: Unmute a player
     permission: lobby.unmute
-  checkban:
-
-  permissions:
+  sb:
+    description: Displays the scoreboard
+    permission: lobby.scoreboard
+permissions:
     lobby.fly:
       description: Allows the player to use /fly
       default: op
