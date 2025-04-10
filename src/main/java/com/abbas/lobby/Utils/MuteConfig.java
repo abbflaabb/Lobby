@@ -8,20 +8,20 @@ public class MuteConfig {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("muteMessages")) {
-            config.set("muteMessages.mute.success", "&aSuccessfully muted &e%player% &afor &e%duration%. Mute ID: &e%mute_id%");
-            config.set("muteMessages.mute.successPermanent", "&aSuccessfully muted &e%player% &apermanently. Mute ID: &e%mute_id%");
-            config.set("muteMessages.mute.noPermission", "&cYou don't have permission to use this command!");
-            config.set("muteMessages.mute.usage", "&cUsage: /mute <player> [duration] <reason>");
-            config.set("muteMessages.mute.playerNotFound", "&cPlayer not found!");
-            config.set("muteMessages.mute.exempt", "&cThis player cannot be muted!");
-            config.set("muteMessages.mute.alreadyMuted", "&cThis player is already muted!");
-            config.set("muteMessages.mute.invalidDuration", "&cInvalid duration format! Use: <number>[s/m/h/d]");
+            config.set("muteMessages.success", "&aSuccessfully muted &e%player% &afor &e%duration%. Mute ID: &e%mute_id%");
+            config.set("muteMessages.successPermanent", "&aSuccessfully muted &e%player% &apermanently. Mute ID: &e%mute_id%");
+            config.set("muteMessages.noPermission", "&cYou don't have permission to use this command!");
+            config.set("muteMessages.usage", "&cUsage: /mute <player> [duration] <reason>");
+            config.set("muteMessages.playerNotFound", "&cPlayer not found!");
+            config.set("muteMessages.exempt", "&cThis player cannot be muted!");
+            config.set("muteMessages.alreadyMuted", "&cThis player is already muted!");
+            config.set("muteMessages.invalidDuration", "&cInvalid duration format! Use: <number>[s/m/h/d]");
 
-            config.set("muteMessages.mute.playerMuted", "&cYou have been muted for &e%duration%&c. Reason: &e%reason%. Mute ID: &e%mute_id%");
-            config.set("muteMessages.mute.playerMutedPermanent", "&cYou have been permanently muted. Reason: &e%reason%. Mute ID: &e%mute_id%");
+            config.set("muteMessages.playerMuted", "&cYou have been muted for &e%duration%&c. Reason: &e%reason%. Mute ID: &e%mute_id%");
+            config.set("muteMessages.playerMutedPermanent", "&cYou have been permanently muted. Reason: &e%reason%. Mute ID: &e%mute_id%");
 
-            config.set("muteMessages.mute.cannotChat", "&cYou cannot chat while muted! Time remaining: &e%timeLeft%");
-            config.set("muteMessages.mute.cannotChatPermanent", "&cYou cannot chat while permanently muted!");
+            config.set("muteMessages.cannotChat", "&cYou cannot chat while muted! Time remaining: &e%timeLeft%");
+            config.set("muteMessages.cannotChatPermanent", "&cYou cannot chat while permanently muted!");
 
             config.set("muteMessages.unmute.success", "&aSuccessfully unmuted &e%player%");
             config.set("muteMessages.unmute.notMuted", "&cThis player is not muted!");
