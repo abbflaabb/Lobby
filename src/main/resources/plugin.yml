@@ -45,7 +45,6 @@ commands:
     permission: lobby.unmute
   sb:
     description: Displays the scoreboard
-    permission: lobby.scoreboard
 permissions:
     lobby.fly:
       description: Allows the player to use /fly
