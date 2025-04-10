@@ -83,15 +83,12 @@ public class PlayerBungeeTeleport implements Listener {
             connectToServer(player, "survival");
         }
     }
-
     private void connectToServer(Player player, String server) {
         try {
             ByteArrayOutputStream b = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(b);
-
             out.writeUTF("Connect");
             out.writeUTF(server);
-
             player.sendMessage(ColorUtils.translateColorCodes("&aConnecting to " + server + "..."));
             player.playSound(player.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
             player.sendPluginMessage(player.getServer().getPluginManager().getPlugin("Lobby"), "BungeeCord", b.toByteArray());
