@@ -27,7 +27,7 @@ public class ScoreBoardCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         if (!player.hasPermission("lobby.scoreboard")) {
-            player.sendMessage(ScoreBoardConfig.getConfig().getString("scoreboard.No-permission", "&cNo permission"));
+            player.sendMessage(ColorUtils.translateColorCodes(ScoreBoardConfig.getConfig().getString("scoreboard.No-permission", "&cNo permission")));
             return true;
         }
 
