@@ -18,17 +18,22 @@ public class SetSpawn implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("setspawn")) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                Location location = player.getLocation();
-                Config.getConfig().set("spawnLocation", location);
-                Config.save();
-                player.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("messages.setspawn.success")));
-                return true;
-            } else {
+            if (!(sender instanceof Player)) {
                 sender.sendMessage("This command can only be run by a player.");
                 return false;
             }
+
+            Player player = (Player) sender;
+            if (!player.hasPermission("lobby.setspawn")) {
+                player.sendMessage(ColorUtils.translateColorCodes("&cYou don't have permission to use this command."));
+                return false;
+            }
+
+            Location location = player.getLocation();
+            Config.getConfig().set("spawnLocation", location);
+            Config.save();
+            player.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("messages.setspawn.success")));
+            return true;
         }
         return false;
     }
