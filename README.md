@@ -36,9 +36,6 @@ This is a custom Lobby plugin designed to enhance the server experience with ess
 - **ServerSelectorListener** - Handles server selection menu interactions
 - **SpawnProtectionListener** - Protects the lobby area from modifications
 
-### **Menus**
-#### Navigation Menus
-- **ServerSelector** - Main menu for selecting and connecting to different
 
 #### Scoreboard
 - **ScoreBoardConfig** - Configurable scoreboard elements and formatting
