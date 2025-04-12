@@ -8,8 +8,6 @@ import com.abbas.lobby.Utils.*;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.premuimCommands.FlyCommand;
-import com.abbas.lobby.menus.MenuGamesListener;
-import com.abbas.lobby.menus.command.openMenuCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -22,7 +20,6 @@ public final class Lobby extends JavaPlugin {
     private final Logger logger = getLogger();
     public ArrayList<Player> vanish_list = new ArrayList<>();
 
-
     @Override
     public void onEnable() {
         logger.info("Lobby plugin Enabled");
@@ -34,18 +31,18 @@ public final class Lobby extends JavaPlugin {
         ScoreBoardConfig.setupConfig();
         WarnConfig.setupConfig();
         MuteConfig.setupConfig();
-
     }
 
     public void addcommands(){
         getCommand("ping").setExecutor(new Ping());
-        getCommand("help").setExecutor(new help());
         getCommand("kick").setExecutor(new Kick());
         getCommand("support").setExecutor(new Support());
         getCommand("vanish").setExecutor(new Vanish(this));
         getCommand("Discord").setExecutor(new Discord());
-        getCommand("menu").setExecutor(new openMenuCommand());
-        getCommand("lobby").setExecutor(new lobby());
+        // Replace this line
+        hub lobbyCommand = new hub();
+        getCommand("lobby").setExecutor(lobbyCommand);
+        getCommand("lobby").setTabCompleter(lobbyCommand);
         getCommand("SetSpawn").setExecutor(new SetSpawn());
         getCommand("Spawn").setExecutor(new Spawn());
         getCommand("Ban").setExecutor(new Ban());
@@ -57,16 +54,14 @@ public final class Lobby extends JavaPlugin {
         getCommand("mute").setExecutor(new MuteCommand());
         getCommand("unmute").setExecutor(new UnmuteCommand());
         ScoreBoardManager boardManager = new ScoreBoardManager(this);
-        getCommand("sb").setExecutor(new ScoreBoardCommand(boardManager));    }
+        getCommand("sb").setExecutor(new ScoreBoardCommand(boardManager));
 
+    }
     public void listeners(){
         PluginManager p = Bukkit.getPluginManager();
         p.registerEvents(new PlayerBlockBreakEvent(), this);
         p.registerEvents(new ScoreBoardListener(this), this);
-        p.registerEvents(new MenuGamesListener(), this);
         p.registerEvents(new JoinListener(), this);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        p.registerEvents(new MenuGamesListener(), this);
         p.registerEvents(new BlockPlace(), this);
         p.registerEvents(new DropEvent(), this);
         p.registerEvents(new ReSpawnListener(), this);
