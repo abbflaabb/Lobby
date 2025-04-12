@@ -1,7 +1,7 @@
 package com.abbas.lobby.commands.PlayerCommands.premuimCommands;
 
-import com.abbas.lobby.Utils.Config;
 import com.abbas.lobby.Utils.ColorUtils;
+import com.abbas.lobby.Utils.Config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,38 +18,40 @@ public class FlyCommand implements CommandExecutor {
         Config.setup();
         FileConfiguration config = Config.getConfig();
 
-        if (!config.isConfigurationSection("fly-messages")) {
-            config.set("fly-messages.noPermission", "&cYou do not have permission to use this command!");
-            config.set("fly-messages.flyEnabled", "&aFly mode enabled!");
-            config.set("fly-messages.flyDisabled", "&cFly mode disabled!");
-            config.set("fly-messages.flyHighEnabled", "&aHigh-Speed Fly mode enabled!");
-            config.set("fly-messages.flyHighDisabled", "&cHigh-Speed Fly mode disabled!");
-            config.set("fly-messages.normalSpeed", 0.1);
-            config.set("fly-messages.highSpeed", 0.5);
+        if (!config.isConfigurationSection("fly")) {
+            config.set("fly.noPermission", "&cYou don't have permission to use this command!");
+            config.set("fly.notAPlayer", "&cOnly players can use this command!");
+            config.set("fly.enabled", "&aFly mode enabled!");
+            config.set("fly.disabled", "&cFly mode disabled!");
+            config.set("fly.highEnabled", "&aHigh-Speed Fly mode enabled!");
+            config.set("fly.highDisabled", "&cHigh-Speed Fly mode disabled!");
+            config.set("fly.normalSpeed", 0.1);
+            config.set("fly.highSpeed", 0.5);
+            Config.save();
         }
-
-
-        Config.save();
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase("fly")) return false;
+
+        FileConfiguration config = Config.getConfig();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ColorUtils.translateColorCodes("&cOnly players can use this command!"));
+            sender.sendMessage(ColorUtils.translateColorCodes(config.getString("fly.notAPlayer")));
             return true;
         }
 
         Player player = (Player) sender;
-        FileConfiguration config = Config.getConfig();
-
         boolean highMode = args.length > 0 && args[0].equalsIgnoreCase("high");
 
         if (highMode && !player.hasPermission("lobby.fly.high")) {
-            player.sendMessage(ColorUtils.translateColorCodes(config.getString("fly-messages.noPermission", "&cYou do not have permission!")));
+            player.sendMessage(ColorUtils.translateColorCodes(config.getString("fly.noPermission")));
             return true;
         }
+
         if (!highMode && !player.hasPermission("lobby.fly")) {
-            player.sendMessage(ColorUtils.translateColorCodes(config.getString("fly-messages.noPermission", "&cYou do not have permission!")));
+            player.sendMessage(ColorUtils.translateColorCodes(config.getString("fly.noPermission")));
             return true;
         }
 
@@ -57,15 +59,15 @@ public class FlyCommand implements CommandExecutor {
         player.setAllowFlight(!isFlying);
         player.setFlying(!isFlying);
 
-        float normalSpeed = (float) config.getDouble("fly-messages.normalSpeed", 0.1);
-        float highSpeed = (float) config.getDouble("fly-messages.highSpeed", 0.5);
-        player.setFlySpeed(isFlying ? 0.1f : (highMode ? highSpeed : normalSpeed));
+        float normalSpeed = (float) config.getDouble("fly.normalSpeed", 0.1);
+        float highSpeed = (float) config.getDouble("fly.highSpeed", 0.5);
+        player.setFlySpeed(!isFlying ? (highMode ? highSpeed : normalSpeed) : 0.1f);
 
         String messageKey = isFlying
-                ? (highMode ? "fly-messages.flyHighDisabled" : "fly-messages.flyDisabled")
-                : (highMode ? "fly-messages.flyHighEnabled" : "fly-messages.flyEnabled");
+                ? (highMode ? "fly.highDisabled" : "fly.disabled")
+                : (highMode ? "fly.highEnabled" : "fly.enabled");
 
-        player.sendMessage(ColorUtils.translateColorCodes(config.getString(messageKey, "&aFly mode updated!")));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(messageKey)));
 
         return true;
     }
