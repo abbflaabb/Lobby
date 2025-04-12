@@ -6,7 +6,7 @@
 
   <groupId>com.Abbas</groupId>
   <artifactId>Lobby</artifactId>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.4.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Lobby</name>
