@@ -13,8 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class WarnCommand implements CommandExecutor {
-   private static final String PERMISSION_WARN = "lobby.warn";
-   private static final String PERMISSION_EXEMPT = "lobby.warn.exempt";
 
    public WarnCommand() {
    }
