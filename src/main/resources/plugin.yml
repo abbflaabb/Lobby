@@ -17,38 +17,38 @@ commands:
   Support:
     description: Displays the Support Message
   Discord:
-    description:
-  menu:
-    description: Every
+    description: Displays the Discord Message
   lobby:
+    description: Main lobby command
+    usage: /<command>
+    aliases: [hub]
   SetSpawn:
     description: Sets the spawn point
-    permission: lobby.setspawn
   Spawn:
     description: Teleports to the spawn point
-    permission: lobby.spawn
   Ban:
+    description: Ban a player
   UnBan:
+    description: Unban a player
   reloadconfig:
+    description: Reloads the config
   warn:
+    description: Warn a player
   fly:
     description: Toggle fly mode
-    usage: /fly [high]
-    permission: lobby.fly
   information:
     description: Display server information and rules
     aliases: [info]
-    permission: lobby.information  
   mute:
+    description: Mute a player
   unmute:
     description: Unmute a player
-    permission: lobby.unmute
   sb:
     description: Displays the scoreboard
 permissions:
-    lobby.fly:
-      description: Allows the player to use /fly
-      default: op
-    lobby.fly.high:
-      description: Allows the player to use high-speed flight mode (/fly high)
-      default: op
+  lobby.fly:
+    description: Allows basic fly command
+    default: op
+  lobby.fly.high:
+    description: Allows high-speed fly mode
+    default: op
