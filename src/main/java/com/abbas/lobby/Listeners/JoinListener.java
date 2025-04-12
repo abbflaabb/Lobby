@@ -2,7 +2,7 @@ package com.abbas.lobby.Listeners;
 
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.menus.MenuGames;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,15 +34,6 @@ public class JoinListener implements Listener {
             config.set("join.messages.leave", "&c%player% &7has left the server!");
         }
 
-        if (!config.isConfigurationSection("compass")) {
-            config.set("compass.name", "&b&lGame Menu &7(Right Click)");
-            config.set("compass.lore", Arrays.asList(
-                    "&7Right click to open the game menu",
-                    "&6Stay in the lobby to explore"
-            ));
-            Config.save();
-        }
-
         Config.save();
     }
 
@@ -55,7 +46,6 @@ public class JoinListener implements Listener {
         event.setJoinMessage(joinText);
 
         player.getInventory().clear();
-        giveMenuCompass(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -65,39 +55,5 @@ public class JoinListener implements Listener {
 
         String quitText = ColorUtils.translateColorCodes(config.getString("join.messages.leave").replace("%player%", player.getName()));
         event.setQuitMessage(quitText);
-    }
-
-    @EventHandler
-    public void onCompassClick(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Action action = event.getAction();
-        ItemStack item = event.getItem();
-
-        if (item != null && item.getType() == Material.COMPASS &&
-                (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
-            if (item.hasItemMeta() && item.getItemMeta().hasDisplayName() &&
-                    item.getItemMeta().getDisplayName().equals(ColorUtils.translateColorCodes("&b&lGame Menu &7(Right Click)"))) {
-                event.setCancelled(true);
-                MenuGames.openGameMenu(player);
-            }
-        }
-    }
-
-    private void giveMenuCompass(Player player) {
-        FileConfiguration config = Config.getConfig();
-
-        String compassName = ColorUtils.translateColorCodes(config.getString("compass.name"));
-        List<String> compassLore = config.getStringList("compass.lore");
-
-        ItemStack compass = new ItemStack(Material.COMPASS);
-        ItemMeta meta = compass.getItemMeta();
-        meta.setDisplayName(compassName);
-
-        meta.setLore(ColorUtils.translateColorCodes(compassLore));
-
-        compass.setItemMeta(meta);
-
-        player.getInventory().setItem(4, compass);
-        player.updateInventory();
     }
 }
