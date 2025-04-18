@@ -62,7 +62,7 @@ public final class Lobby extends JavaPlugin {
         getCommand("lobby").setTabCompleter(lobbyCommand);
         getCommand("SetSpawn").setExecutor(new SetSpawn());
         getCommand("Spawn").setExecutor(new Spawn());
-        getCommand("Ban").setExecutor(new Ban());
+        getCommand("ban").setExecutor(new Ban());
         getCommand("UnBan").setExecutor(new Unban());
         getCommand("reloadconfig").setExecutor(new ReloadConfigs());
         getCommand("fly").setExecutor(new FlyCommand());
@@ -93,6 +93,7 @@ public final class Lobby extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
         logger.info("╔════════════════════════════════════╗");
         logger.info("║      Shutting down Lobby...        ║");
         logger.info("║------------------------------------║");

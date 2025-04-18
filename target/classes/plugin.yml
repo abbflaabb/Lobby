@@ -1,0 +1,56 @@
+name: Lobby
+version: '1.4.2-SNAPSHOT'
+main: com.abbas.lobby.Lobby
+load: STARTUP
+description: "Lobby Plugin"
+authors:
+  - Abbas
+api-version: 1.13
+depend: [PlaceholderAPI, LuckPerms]
+commands:
+  vanish:
+    description: become invisible to normal players
+  kick:
+    desciption: kicks a player from the server
+  help:
+    description: Displays the Help Message
+  ping:
+    description: Displays the Players Ping
+  Support:
+    description: Displays the Support Message
+  Discord:
+    description: Displays the Discord Message
+  lobby:
+    description: Main lobby command
+    usage: /<command>
+    aliases: [hub]
+  SetSpawn:
+    description: Sets the spawn point
+  Spawn:
+    description: Teleports to the spawn point
+  Ban:
+    description: Ban a player
+  UnBan:
+    description: Unban a player
+  reloadconfig:
+    description: Reloads the config
+  warn:
+    description: Warn a player
+  fly:
+    description: Toggle fly mode
+  information:
+    description: Display server information and rules
+    aliases: [info]
+  mute:
+    description: Mute a player
+  unmute:
+    description: Unmute a player
+  sb:
+    description: Displays the scoreboard
+permissions:
+  lobby.fly:
+    description: Allows basic fly command
+    default: op
+  lobby.fly.high:
+    description: Allows high-speed fly mode
+    default: op

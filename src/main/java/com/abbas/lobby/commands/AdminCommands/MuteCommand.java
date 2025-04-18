@@ -191,7 +191,6 @@ public class MuteCommand implements CommandExecutor {
       return null;
    }
 
-   // Keep existing static methods with updated muteIds handling
    public static boolean isPlayerMuted(UUID playerUUID) {
       if (!mutedPlayers.containsKey(playerUUID)) return false;
       Long expirationTime = mutedPlayers.get(playerUUID);
