@@ -1,6 +1,7 @@
 package com.abbas.lobby.Scoreobard;
 
 import com.abbas.lobby.Lobby;
+import com.abbas.lobby.Placeholders.Placeholders;
 import com.abbas.lobby.Utils.ColorUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -10,11 +11,13 @@ import org.bukkit.scoreboard.*;
 public class ScoreBoardManager {
     private final Lobby plugin;
     private static final int MAX_LINE_LENGTH = 40;
+    private final Placeholders placeholders;
 
     public ScoreBoardManager(Lobby plugin) {
         this.plugin = plugin;
         ScoreBoardConfig.setupConfig();
         LuckPermsRank.setup();
+        this.placeholders = new Placeholders();
 
     }
 
@@ -61,11 +64,15 @@ public class ScoreBoardManager {
 
 
     private String replacePlaceholders(String line, Player player) {
-        return line
+        String replaced = line
                 .replace("%online_players%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%player_name%", player.getName())
-                .replace("%Lobby_rank%", LuckPermsRank.getPlayerRank(player));
+                .replace("%Lobby_rank%", LuckPermsRank.getPlayerRank(player))
+                .replace("%ip_server%", Bukkit.getServer().getIp());
+
+        return placeholders.replacePlaceholders(replaced, player);
     }
+
 
     public void updateScoreboard() {
         for (Player player : Bukkit.getOnlinePlayers()) {
