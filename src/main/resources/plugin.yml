@@ -3,6 +3,8 @@ version: '${project.version}'
 main: com.abbas.lobby.Lobby
 load: STARTUP
 description: "Lobby Plugin"
+authors:
+  - Abbas
 api-version: 1.13
 depend: [PlaceholderAPI, LuckPerms]
 commands:

@@ -160,7 +160,6 @@ public class hub implements CommandExecutor, TabCompleter {
             }
         }, COOLDOWN_SECONDS * 1000L);
     }
-
     private int getRemainingCooldown(Player player) {
         return COOLDOWN_SECONDS;
     }
