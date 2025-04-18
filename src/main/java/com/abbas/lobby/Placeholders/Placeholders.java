@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 public class Placeholders {
     private final Map<String, Function<Player, String>> placeholders;
 
@@ -14,7 +13,6 @@ public class Placeholders {
         this.placeholders = new HashMap<>();
         setupDefaultPlaceholders();
     }
-
     private void setupDefaultPlaceholders() {
         placeholders.put("%player_name%", Player::getName);
         placeholders.put("%Lobby_rank%", player -> LuckPermsRank.getPlayerRank(player));
