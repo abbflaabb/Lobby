@@ -13,7 +13,6 @@ public class Config {
 
     public static void setup() {
         file = new File(Bukkit.getServer().getPluginManager().getPlugin("Lobby").getDataFolder(), "config.yml");
-
         if (!file.exists()) {
             try {
                 file.createNewFile();
