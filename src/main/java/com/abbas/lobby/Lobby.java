@@ -91,8 +91,6 @@ public final class Lobby extends JavaPlugin {
         TeleportBow.setup();
     }
 
-
-
     @Override
     public void onDisable() {
         logger.info("╔════════════════════════════════════╗");
