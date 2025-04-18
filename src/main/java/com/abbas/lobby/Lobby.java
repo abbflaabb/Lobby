@@ -1,9 +1,12 @@
 package com.abbas.lobby;
 
+import com.abbas.lobby.Items.TeleportBow;
 import com.abbas.lobby.Listeners.*;
 import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
 import com.abbas.lobby.Scoreobard.ScoreBoardListener;
 import com.abbas.lobby.Scoreobard.ScoreBoardManager;
+import com.abbas.lobby.SubTitle.SubTitle;
+import com.abbas.lobby.SubTitle.SubTitleListener;
 import com.abbas.lobby.Utils.*;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
@@ -22,7 +25,21 @@ public final class Lobby extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        logger.info("Lobby plugin Enabled");
+        logger.info("╔════════════════════════════════════╗");
+        logger.info("║        Lobby Plugin v" + getDescription().getVersion() + "║");
+        logger.info("║------------------------------------║");
+
+        String author = "Unknown";
+        if (!getDescription().getAuthors().isEmpty()) {
+            author = getDescription().getAuthors().get(0);
+        }
+        logger.info("║  Author: " + author + "                     ║");
+        logger.info("║  Server: " + getServer().getBukkitVersion() + "       ║");
+        logger.info("║  Dependencies:                     ║");
+        logger.info("║    - PlaceholderAPI                ║");
+        logger.info("║    - LuckPerms                     ║");
+        logger.info("╚════════════════════════════════════╝");
+        logger.info("Loading commands and listeners...");
         addcommands();
         listeners();
         Config.setup();
@@ -67,15 +84,24 @@ public final class Lobby extends JavaPlugin {
         p.registerEvents(new ReSpawnListener(), this);
         p.registerEvents(new BanListener(), this);
         getServer().getPluginManager().registerEvents(new MuteChatListener(), this);
-
+        p.registerEvents(new Hunger(), this);
+        SubTitle subTitle = new SubTitle();
+        getServer().getPluginManager().registerEvents(new SubTitleListener(subTitle, this), this);
+        p.registerEvents(new TeleportBowListener(this), this);
+        TeleportBow.setup();
     }
 
 
 
     @Override
     public void onDisable() {
-        logger.info("Lobby plugin Disabled");
-
+        logger.info("╔════════════════════════════════════╗");
+        logger.info("║      Shutting down Lobby...        ║");
+        logger.info("║------------------------------------║");
+        logger.info("║  Saving configurations...          ║");
+        logger.info("║  Cleaning up resources...          ║");
+        logger.info("║  Plugin disabled successfully      ║");
+        logger.info("╚════════════════════════════════════╝");
     }
 
 }
