@@ -8,7 +8,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-
 public class SubTitle {
     private final Placeholders placeholders;
 
