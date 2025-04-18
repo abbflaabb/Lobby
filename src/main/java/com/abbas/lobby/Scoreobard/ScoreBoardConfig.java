@@ -22,7 +22,7 @@ public class ScoreBoardConfig {
                     "&fRank: &a%Lobby_rank%",
                     "&fBalance: &6%vault_eco_balance_formatted%",
                     "",
-                    "&ewebsite.com",
+                    "&e%ip_server%",
                     "&8&m------------------------"
             });
             config.set("scoreboard.update-interval", 20);
