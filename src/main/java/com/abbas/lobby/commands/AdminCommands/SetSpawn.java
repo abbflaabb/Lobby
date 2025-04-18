@@ -38,7 +38,6 @@ public class SetSpawn implements CommandExecutor {
         return false;
     }
 
-
     private void setupConfig() {
         Config.setup();
         FileConfiguration config = Config.getConfig();
