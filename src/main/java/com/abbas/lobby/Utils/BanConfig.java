@@ -20,6 +20,7 @@ public class BanConfig {
                     + "§7Unban application in TS or forum\n"
                     + "§eTS-Ip§7 » §ccoming soon\n"
                     + "§eForum§7 » §ccoming soon");
+            config.set("banMessages.playerOnly","&c⚠ This command can only be used by players!");
             config.set("banMessages.invalidDuration", "&cInvalid duration format. Use s (seconds), m (minutes), h (hours), or d (days).");
             config.set("banMessages.expiration", "&aBan expires on %date%");
             config.set("banMessages.advancedBanMessage", "§c§lLobbyBan §7» §cBanned for %reason%\n"
