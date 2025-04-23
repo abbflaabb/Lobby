@@ -1,6 +1,8 @@
 package com.abbas.lobby.SubTitle;
 
 import com.abbas.lobby.Placeholders.Placeholders;
+import com.abbas.lobby.API.ISubTitle;
+import com.abbas.lobby.Scoreobard.LuckPermsRank;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
@@ -9,15 +11,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public class SubTitle {
+public class SubTitle implements ISubTitle {
     private final Placeholders placeholders;
 
     public SubTitle() {
-        this.placeholders = new Placeholders();
+        this.placeholders = new Placeholders(new LuckPermsRank());
         setupConfig();
     }
 
-    private void setupConfig() {
+
+    @Override
+    public void setupConfig() {
         Config.setup();
         FileConfiguration config = Config.getConfig();
 
@@ -28,16 +32,10 @@ public class SubTitle {
             config.set("titles.welcome.stay", 60);
             config.set("titles.welcome.fadeOut", 20);
 
-            config.set("titles.rank.title", "&b&l%Lobby_rank%");
-            config.set("titles.rank.subtitle", "&7%player_name%");
-            config.set("titles.rank.fadeIn", 10);
-            config.set("titles.rank.stay", 40);
-            config.set("titles.rank.fadeOut", 10);
-
             Config.save();
         }
     }
-
+    @Override
     public void sendTitle(Player player, String type) {
         FileConfiguration config = Config.getConfig();
         String titlePath = "titles." + type + ".";
@@ -67,13 +65,8 @@ public class SubTitle {
         sendTitlePacket(player, title, subtitle, fadeIn, stay, fadeOut);
     }
 
-    public void sendCustomTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        title = ColorUtils.translateColorCodes(placeholders.replacePlaceholders(title, player));
-        subtitle = ColorUtils.translateColorCodes(placeholders.replacePlaceholders(subtitle, player));
-        sendTitlePacket(player, title, subtitle, fadeIn, stay, fadeOut);
-    }
-
-    private void sendTitlePacket(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    @Override
+    public void sendTitlePacket(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
         PacketPlayOutTitle timings = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
@@ -87,7 +80,7 @@ public class SubTitle {
         PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitleComponent);
         craftPlayer.getHandle().playerConnection.sendPacket(subtitlePacket);
     }
-
+    @Override
     public void clearTitle(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         PacketPlayOutTitle clearPacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.RESET, null);
