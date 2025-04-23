@@ -7,50 +7,115 @@ authors:
   - Abbas
 api-version: 1.13
 depend: [PlaceholderAPI, LuckPerms]
+
 commands:
-  vanish:
-    description: become invisible to normal players
-  kick:
-    desciption: kicks a player from the server
-  help:
-    description: Displays the Help Message
-  ping:
-    description: Displays the Players Ping
-  Support:
-    description: Displays the Support Message
-  Discord:
-    description: Displays the Discord Message
+  # ICommandAPI Commands
+  discord:
+    usage: /<command>
+  fly:
+    usage: /<command>
+  information:
+    usage: /<command>
+    aliases: [info]
   lobby:
-    description: Main lobby command
     usage: /<command>
     aliases: [hub]
-  SetSpawn:
-    description: Sets the spawn point
-  Spawn:
-    description: Teleports to the spawn point
-  Ban:
-    description: Ban a player
-  UnBan:
-    description: Unban a player
+  ping:
+    usage: /<command>
+  spawn:
+    usage: /<command>
+  support:
+    usage: /<command>
+  vanish:
+    usage: /<command>
+  kick:
+    usage: /<command>
+  setspawn:
+    usage: /<command>
+  ban:
+    usage: /<command>
+  unban:
+    usage: /<command>
   reloadconfig:
-    description: Reloads the config
+    usage: /<command>
   warn:
-    description: Warn a player
-  fly:
-    description: Toggle fly mode
-  information:
-    description: Display server information and rules
-    aliases: [info]
+    usage: /<command>
   mute:
-    description: Mute a player
+    usage: /<command>
   unmute:
     description: Unmute a player
-  sb:
-    description: Displays the scoreboard
+    usage: /<command>
+  bossbarreload:
+    usage: /<command>
+
 permissions:
+  # Admin Permissions
+  lobby.ban:
+    description: Allows banning players
+    default: op
+  lobby.kick:
+    description: Allows kicking players
+    default: op
+  lobby.mute:
+    description: Allows muting players
+    default: op
+  lobby.mute.exempt:
+    description: Exempts player from being muted
+    default: op
+  lobby.reloadconfig:
+    description: Allows reloading plugin configuration
+    default: op
+  lobby.setspawn:
+    description: Allows setting the spawn point
+    default: op
+  lobby.unban:
+    description: Allows unbanning players
+    default: op
+  lobby.unmute:
+    description: Allows unmuting players
+    default: op
+  lobby.vanish:
+    description: Allows using vanish command
+    default: op
+  lobby.warn:
+    description: Allows warning players
+    default: op
+
+  # Premium Permissions
   lobby.fly:
     description: Allows basic fly command
     default: op
   lobby.fly.high:
     description: Allows high-speed fly mode
+    default: op
+
+  # Player Permissions
+  lobby.lobby:
+    description: Allows using lobby command
+    default: true
+  lobby.information:
+    description: Allows viewing server information
+    default: true
+  lobby.ping:
+    description: Allows checking ping
+    default: true
+  lobby.scoreboard:
+    description: Allows toggling scoreboard
+    default: true
+  lobby.support:
+    description: Allows using support command
+    default: true
+  lobby.discord:
+    description: Allows using discord command
+    default: true
+
+  # Event Permissions
+  lobby.BlockPlace:
+    description: Allows placing blocks
+    default: op
+  lobby.drop:
+    description: Allows dropping items
+    default: op
+  lobby.BlockBreak:
+    description: Allows breaking blocks
     default: op
