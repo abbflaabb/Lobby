@@ -1,4 +1,4 @@
-package com.abbas.lobby.Scoreobard;
+package com.abbas.lobby.Scoreboard;
 
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,9 +11,11 @@ public class ScoreBoardConfig {
         config = Config.getConfig();
         if (!config.isConfigurationSection("scoreboard")) {
             config.set("scoreboard.title", "&e&lLOBBY");
-            config.set("scoreboard.enabled-message", "&aScoreboard enabled!");
-            config.set("scoreboard.disabled-message", "&cScoreboard disabled!");
-            config.set("scoreboard.No-permission", "&cNo permission");
+            config.set("scoreboard.No-permission", "&c⚠ You do not have permission to toggle the scoreboard!");
+            config.set("scoreboard.enabled-message", "&a✔ Scoreboard enabled!");
+            config.set("scoreboard.disabled-message", "&c✖ Scoreboard disabled!");
+            config.set("scoreboard.error-message", "&c⚠ Error toggling scoreboard!");
+            config.set("scoreboard.player-only", "&c⚠ This command can only be used by players!");
             config.set("scoreboard.lines", new String[]{
                     "&8&m------------------------",
                     "&fOnline Players: &a%online_players%",
