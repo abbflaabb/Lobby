@@ -1,4 +1,4 @@
-package com.abbas.lobby.Scoreobard;
+package com.abbas.lobby.Scoreboard;
 
 import com.abbas.lobby.API.ILuckPerms;
 import com.abbas.lobby.Lobby;
