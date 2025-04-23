@@ -1,5 +1,7 @@
 package com.abbas.lobby.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
+
+
 public class WarnConfig {
     public static void setupConfig() {
         Config.setup();
