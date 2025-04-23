@@ -6,7 +6,7 @@ import com.abbas.lobby.BossBar.BossBarConfig;
 import com.abbas.lobby.BossBar.BossBarListener;
 import com.abbas.lobby.BossBar.BossBarReload;
 import com.abbas.lobby.Placeholders.Placeholders;
-import com.abbas.lobby.Scoreobard.*;
+import com.abbas.lobby.Scoreboard.*;
 import com.abbas.lobby.TeleportBow.TeleportBow;
 import com.abbas.lobby.Listeners.*;
 import com.abbas.lobby.SubTitle.SubTitle;
@@ -36,6 +36,7 @@ public final class Lobby extends JavaPlugin {
     private ITeleportAPI teleportAPI;
     private IScoreboard scoreboard;
     private ILuckPerms luckPerms;
+    private ICommandAPI commandAPI;
     @Override
     public void onEnable() {
         logger.info("╔════════════════════════════════════╗");
@@ -74,7 +75,6 @@ public final class Lobby extends JavaPlugin {
     }
 
     private void registerCommands() {
-        registerAPICommand(new Discord());
         registerAPICommand(new FlyCommand());
         registerAPICommand(new hub());
         registerAPICommand(new InformationCommand());
@@ -91,10 +91,11 @@ public final class Lobby extends JavaPlugin {
         registerAPICommand(new WarnCommand());
         registerAPICommand(new UnmuteCommand());
         registerAPICommand(new BossBarReload(this));
+        registerAPICommand(new ScoreBoardCommand(this.scoreboard));
         hub lobbyCommand = new hub();
         getCommand("lobby").setExecutor(lobbyCommand);
         getCommand("lobby").setTabCompleter(lobbyCommand);
-
+        getCommand("Discord").setExecutor(new Discord());
     }
 
     private void registerAPICommand(ICommandAPI command) {
