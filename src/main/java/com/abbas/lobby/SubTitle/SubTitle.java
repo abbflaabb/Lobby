@@ -2,7 +2,7 @@ package com.abbas.lobby.SubTitle;
 
 import com.abbas.lobby.Placeholders.Placeholders;
 import com.abbas.lobby.API.ISubTitle;
-import com.abbas.lobby.Scoreobard.LuckPermsRank;
+import com.abbas.lobby.Scoreboard.LuckPermsRank;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
