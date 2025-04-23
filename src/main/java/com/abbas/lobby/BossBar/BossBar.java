@@ -1,9 +1,9 @@
 package com.abbas.lobby.BossBar;
 
 import com.abbas.lobby.API.IBossBar;
-import com.abbas.lobby.API.ILuckPerms;
+
 import com.abbas.lobby.Placeholders.Placeholders;
-import com.abbas.lobby.Scoreobard.LuckPermsRank;
+import com.abbas.lobby.Scoreboard.LuckPermsRank;
 import com.abbas.lobby.Utils.ColorUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar.Color;
