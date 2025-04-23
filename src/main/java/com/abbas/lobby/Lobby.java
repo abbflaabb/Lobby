@@ -1,98 +1,159 @@
 package com.abbas.lobby;
 
-import com.abbas.lobby.Items.TeleportBow;
+import com.abbas.lobby.API.*;
+import com.abbas.lobby.BossBar.BossBar;
+import com.abbas.lobby.BossBar.BossBarConfig;
+import com.abbas.lobby.BossBar.BossBarListener;
+import com.abbas.lobby.BossBar.BossBarReload;
+import com.abbas.lobby.Placeholders.Placeholders;
+import com.abbas.lobby.Scoreobard.*;
+import com.abbas.lobby.TeleportBow.TeleportBow;
 import com.abbas.lobby.Listeners.*;
-import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
-import com.abbas.lobby.Scoreobard.ScoreBoardListener;
-import com.abbas.lobby.Scoreobard.ScoreBoardManager;
 import com.abbas.lobby.SubTitle.SubTitle;
 import com.abbas.lobby.SubTitle.SubTitleListener;
+import com.abbas.lobby.TeleportBow.TeleportBowListener;
 import com.abbas.lobby.Utils.*;
 import com.abbas.lobby.commands.AdminCommands.*;
 import com.abbas.lobby.commands.PlayerCommands.*;
-import com.abbas.lobby.commands.PlayerCommands.premuimCommands.FlyCommand;
+import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public final class Lobby extends JavaPlugin {
     private final Logger logger = getLogger();
+    private final List<ICommandAPI> commands = new ArrayList<>();
     public ArrayList<Player> vanish_list = new ArrayList<>();
-
+    public BossBar bossBar;
+    private Placeholders placeholders;
+    private ISubTitle subTitle;
+    private static Lobby instance;
+    private ITeleportAPI teleportAPI;
+    private IScoreboard scoreboard;
+    private ILuckPerms luckPerms;
     @Override
     public void onEnable() {
         logger.info("╔════════════════════════════════════╗");
         logger.info("║        Lobby Plugin v" + getDescription().getVersion() + "║");
         logger.info("║------------------------------------║");
 
-        String author = "Unknown";
-        if (!getDescription().getAuthors().isEmpty()) {
-            author = getDescription().getAuthors().get(0);
-        }
-        logger.info("║  Author: " + author + "                     ║");
-        logger.info("║  Server: " + getServer().getBukkitVersion() + "       ║");
-        logger.info("║  Dependencies:                     ║");
-        logger.info("║    - PlaceholderAPI                ║");
-        logger.info("║    - LuckPerms                     ║");
-        logger.info("╚════════════════════════════════════╝");
-        logger.info("Loading commands and listeners...");
-        addcommands();
-        listeners();
+        initializeServices();
+        registerAPIServices();
+        registerCommands();
+        registerListeners();
+        setupConfigs();
+
+        logStartupInfo();
+    }
+
+    private void initializeServices() {
+        this.bossBar = new BossBar(this);
+        BossBarAPI.initialize(this);
+        this.placeholders = new Placeholders(this.luckPerms);
+        this.subTitle = new SubTitle();
+        instance = this;
+        this.teleportAPI = new TeleportBow();
+        this.teleportAPI.setupConfig();
+        this.luckPerms = new LuckPermsRank();
+        this.luckPerms.setup();
+        this.scoreboard = new ScoreBoardManager(this);
+    }
+
+    private void registerAPIServices() {
+        getServer().getServicesManager().register(
+                ISubTitle.class,
+                this.subTitle,
+                this,
+                ServicePriority.Normal
+        );
+    }
+
+    private void registerCommands() {
+        registerAPICommand(new Discord());
+        registerAPICommand(new FlyCommand());
+        registerAPICommand(new hub());
+        registerAPICommand(new InformationCommand());
+        registerAPICommand(new Ping());
+        registerAPICommand(new Spawn());
+        registerAPICommand(new Support());
+        registerAPICommand(new Ban());
+        registerAPICommand(new Kick());
+        registerAPICommand(new MuteCommand());
+        registerAPICommand(new ReloadConfigs());
+        registerAPICommand(new SetSpawn());
+        registerAPICommand(new Vanish(this));
+        registerAPICommand(new Unban());
+        registerAPICommand(new WarnCommand());
+        registerAPICommand(new UnmuteCommand());
+        registerAPICommand(new BossBarReload(this));
+        hub lobbyCommand = new hub();
+        getCommand("lobby").setExecutor(lobbyCommand);
+        getCommand("lobby").setTabCompleter(lobbyCommand);
+
+    }
+
+    private void registerAPICommand(ICommandAPI command) {
+        commands.add(command);
+        getCommand(command.getCommandName()).setExecutor(command);
+        logger.info("Registered API command: " + command.getCommandName());
+    }
+
+    private void registerListeners() {
+        PluginManager pm = Bukkit.getPluginManager();
+
+        pm.registerEvents(new PlayerBlockBreakEvent(), this);
+        pm.registerEvents(new ScoreBoardListener(this), this);
+        pm.registerEvents(new JoinListener(), this);
+        pm.registerEvents(new BlockPlace(), this);
+        pm.registerEvents(new DropEvent(), this);
+        pm.registerEvents(new ReSpawnListener(), this);
+        pm.registerEvents(new BanListener(), this);
+        pm.registerEvents(new MuteChatListener(), this);
+        pm.registerEvents(new Hunger(), this);
+        pm.registerEvents(new SubTitleListener(this.subTitle, this), this);
+        pm.registerEvents(new TeleportBowListener(this), this);
+        pm.registerEvents(new BossBarListener(), this);
+    }
+
+    private void setupConfigs() {
         Config.setup();
         UnbanConfig.setupConfig();
         BanConfig.setupConfig();
         ScoreBoardConfig.setupConfig();
         WarnConfig.setupConfig();
         MuteConfig.setupConfig();
+        BossBarConfig.setup();
     }
 
-    public void addcommands(){
-        getCommand("ping").setExecutor(new Ping());
-        getCommand("kick").setExecutor(new Kick());
-        getCommand("support").setExecutor(new Support());
-        getCommand("vanish").setExecutor(new Vanish(this));
-        getCommand("Discord").setExecutor(new Discord());
-        // Replace this line
-        hub lobbyCommand = new hub();
-        getCommand("lobby").setExecutor(lobbyCommand);
-        getCommand("lobby").setTabCompleter(lobbyCommand);
-        getCommand("SetSpawn").setExecutor(new SetSpawn());
-        getCommand("Spawn").setExecutor(new Spawn());
-        getCommand("ban").setExecutor(new Ban());
-        getCommand("UnBan").setExecutor(new Unban());
-        getCommand("reloadconfig").setExecutor(new ReloadConfigs());
-        getCommand("fly").setExecutor(new FlyCommand());
-        getCommand("warn").setExecutor(new WarnCommand());
-        getCommand("information").setExecutor(new InformationCommand());
-        getCommand("mute").setExecutor(new MuteCommand());
-        getCommand("unmute").setExecutor(new UnmuteCommand());
-        ScoreBoardManager boardManager = new ScoreBoardManager(this);
-        getCommand("sb").setExecutor(new ScoreBoardCommand(boardManager));
+    private void logStartupInfo() {
+        String author = getDescription().getAuthors().isEmpty() ? "Unknown" : getDescription().getAuthors().get(0);
 
-    }
-    public void listeners(){
-        PluginManager p = Bukkit.getPluginManager();
-        p.registerEvents(new PlayerBlockBreakEvent(), this);
-        p.registerEvents(new ScoreBoardListener(this), this);
-        p.registerEvents(new JoinListener(), this);
-        p.registerEvents(new BlockPlace(), this);
-        p.registerEvents(new DropEvent(), this);
-        p.registerEvents(new ReSpawnListener(), this);
-        p.registerEvents(new BanListener(), this);
-        getServer().getPluginManager().registerEvents(new MuteChatListener(), this);
-        p.registerEvents(new Hunger(), this);
-        SubTitle subTitle = new SubTitle();
-        getServer().getPluginManager().registerEvents(new SubTitleListener(subTitle, this), this);
-        p.registerEvents(new TeleportBowListener(this), this);
-        TeleportBow.setup();
+        logger.info("║  Author: " + author + "                     ║");
+        logger.info("║  Server: " + getServer().getBukkitVersion() + "       ║");
+        logger.info("║  Dependencies:                     ║");
+        logger.info("║    - PlaceholderAPI                ║");
+        logger.info("║    - LuckPerms                     ║");
+        logger.info("║    - Vault                         ║");
+        logger.info("╚════════════════════════════════════╝");
     }
 
     @Override
     public void onDisable() {
+        if (bossBar != null) {
+            bossBar.close();
+        }
+
+        BossBarAPI.shutdown();
+        getServer().getServicesManager().unregisterAll(this);
+
+        getServer().getOnlinePlayers().forEach(player ->
+                this.subTitle.clearTitle(player)
+        );
 
         logger.info("╔════════════════════════════════════╗");
         logger.info("║      Shutting down Lobby...        ║");
@@ -103,4 +164,36 @@ public final class Lobby extends JavaPlugin {
         logger.info("╚════════════════════════════════════╝");
     }
 
+
+    public List<ICommandAPI> getCommands() {
+        return commands;
+    }
+
+    public Placeholders getPlaceholders() {
+        return placeholders;
+    }
+
+    public ISubTitle getSubTitleAPI() {
+        return this.subTitle;
+    }
+
+    public IBossBar getBossBarAPI() {
+        return BossBarAPI.getBossBar();
+    }
+
+    public ITeleportAPI getTeleportAPI() {
+        return teleportAPI;
+    }
+
+    public IScoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    public ILuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+
+    public static Lobby getInstance() {
+        return instance;
+    }
 }
