@@ -1,6 +1,5 @@
 package com.abbas.lobby.Listeners;
 
-import com.abbas.lobby.API.EventsAPI.BanListenerAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.BanEntry;
@@ -13,35 +12,41 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class BanListener implements Listener, BanListenerAPI {
+public class BanListener implements Listener {
 
     @EventHandler
-    @Override
-    public void handlePlayerLogin(PlayerLoginEvent event) {
+    public void onPlayerLogin(PlayerLoginEvent event) {
         String playerName = event.getPlayer().getName();
-        BanEntry banEntry = getBanEntry(playerName);
+        BanList banList = Bukkit.getBanList(BanList.Type.NAME);
+        BanEntry banEntry = banList.getBanEntry(playerName);
 
         if (banEntry != null) {
             Date expires = banEntry.getExpiration();
-            String timeLeft = calculateTimeLeft(expires);
+            String reason = banEntry.getReason();
+            String timeLeft = (expires != null) ? getTimeLeft(expires) : "Permanent";
+
             String banId = getBanIdForPlayer(playerName);
-            String message = formatBanMessage(banEntry.getReason(), timeLeft, banId);
-            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, message);
+            if (banId == null) {
+                banId = "Unknown";
+            }
+
+            String kickMessage = Config.getConfig().getString("banMessages.advancedBanMessage")
+                    .replace("%reason%", reason)
+                    .replace("%timeLeft%", timeLeft)
+                    .replace("%ban_id%", banId);
+
+            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, ColorUtils.translateColorCodes(kickMessage));
         }
     }
 
-    @Override
-    public String getBanIdForPlayer(String playerName) {
+    private String getBanIdForPlayer(String playerName) {
         if (Config.getConfig().contains("banIds." + playerName.toLowerCase())) {
             return Config.getConfig().getString("banIds." + playerName.toLowerCase());
         }
-        return "Unknown";
+        return null;
     }
 
-    @Override
-    public String calculateTimeLeft(Date expires) {
-        if (expires == null) return "Permanent";
-
+    private String getTimeLeft(Date expires) {
         long diff = expires.getTime() - System.currentTimeMillis();
         long days = TimeUnit.MILLISECONDS.toDays(diff);
         long hours = TimeUnit.MILLISECONDS.toHours(diff) % 24;
