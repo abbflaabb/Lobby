@@ -1,6 +1,6 @@
 package com.abbas.lobby.SubTitle;
 
-import com.abbas.lobby.API.ISubTitle;
+import com.abbas.lobby.API.MainAPIS.ISubTitle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
