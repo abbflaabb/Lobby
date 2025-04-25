@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,12 +23,18 @@ public class Spawn implements ICommandAPI {
         Config.setup();
         FileConfiguration config = Config.getConfig();
 
-        if (!config.isConfigurationSection("messages.spawn")) {
-            config.set("spawn.noPermission", "&c⚠ You do not have permission to use this command!");
-            config.set("spawn.playerOnly", "&c⚠ Console cannot use this command!");
-            config.set("spawn.teleport", "&aTeleported to spawn.");
-            config.set("spawn.notSet", "&c⚠ Spawn location is not set.");
-            config.set("spawn.setspawn.success", "&aSpawn location set successfully.");
+        if (!config.isConfigurationSection("spawn")) {
+            config.set(ConfigCommandPath.SPAWN_NO_PERMISSION, "&c⚠ You do not have permission to use this command!");
+            config.set(ConfigCommandPath.SPAWN_PLAYER_ONLY, "&c⚠ Console cannot use this command!");
+            config.set(ConfigCommandPath.SPAWN_TELEPORT, "&aTeleported to spawn.");
+            config.set(ConfigCommandPath.SPAWN_NOT_SET, "&c⚠ Spawn location is not set.");
+            config.set(ConfigCommandPath.SPAWN_SET_SUCCESS, "&aSpawn location set successfully.");
+
+            Config.save();
+        }
+
+        if (!config.contains(ConfigCommandPath.SPAWN_LOCATION)) {
+            config.set(ConfigCommandPath.SPAWN_LOCATION, null);
             Config.save();
         }
     }
@@ -54,15 +61,19 @@ public class Spawn implements ICommandAPI {
 
     private void teleportToSpawn(Player player) {
         FileConfiguration config = Config.getConfig();
-        Location spawnLocation = (Location) config.get("spawnLocation");
+        Location spawnLocation = (Location) config.get(ConfigCommandPath.SPAWN_LOCATION);
 
         if (spawnLocation != null) {
             player.teleport(spawnLocation);
-            player.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("spawn.teleport")));
+            String message = config.getString(ConfigCommandPath.SPAWN_TELEPORT);
+            if (message != null) {
+                player.sendMessage(ColorUtils.translateColorCodes(message));
+            }
         } else {
-            player.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("spawn.notSet")));
+            String message = config.getString(ConfigCommandPath.SPAWN_NOT_SET);
+            if (message != null) {
+                player.sendMessage(ColorUtils.translateColorCodes(message));
+            }
         }
     }
 
@@ -89,7 +100,7 @@ public class Spawn implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("spawn.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.SPAWN_NO_PERMISSION)));
     }
 
     @Override
@@ -100,6 +111,6 @@ public class Spawn implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("spawn.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.SPAWN_PLAYER_ONLY)));
     }
 }
