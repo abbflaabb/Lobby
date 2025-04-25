@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,11 +23,11 @@ public class Discord implements ICommandAPI {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("discord")) {
-            config.set("discord.message-1", "&3&l &9&lDiscord");
-            config.set("discord.message-2", "&3&l Join our discord server");
-            config.set("discord.message-3", "&3&l www.discord.com/example.com");
-            config.set("discord.noPermission", "&cYou don't have permission to use this command!");
-            config.set("discord.playerOnly", "&cThis command can only be used by players!");
+            config.set(ConfigCommandPath.DISCORD_MESSAGE_1, "&3&l &9&lDiscord");
+            config.set(ConfigCommandPath.DISCORD_MESSAGE_2, "&3&l Join our discord server");
+            config.set(ConfigCommandPath.DISCORD_MESSAGE_3, "&3&l www.discord.com/example.com");
+            config.set(ConfigCommandPath.DISCORD_NO_PERMISSION, "&cYou don't have permission to use this command!");
+            config.set(ConfigCommandPath.DISCORD_PLAYER_ONLY, "&cThis command can only be used by players!");
             Config.save();
         }
     }
@@ -53,9 +54,9 @@ public class Discord implements ICommandAPI {
 
     private void sendDiscordMessages(Player player) {
         FileConfiguration config = Config.getConfig();
-        String message1 = config.getString("discord.message-1");
-        String message2 = config.getString("discord.message-2");
-        String message3 = config.getString("discord.message-3");
+        String message1 = config.getString(ConfigCommandPath.DISCORD_MESSAGE_1);
+        String message2 = config.getString(ConfigCommandPath.DISCORD_MESSAGE_2);
+        String message3 = config.getString(ConfigCommandPath.DISCORD_MESSAGE_3);
 
         player.sendMessage(ColorUtils.translateColorCodes(message1));
         player.sendMessage(ColorUtils.translateColorCodes(message2));
@@ -84,7 +85,7 @@ public class Discord implements ICommandAPI {
 
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
-        sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("discord.noPermission")));
+        sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString(ConfigCommandPath.DISCORD_NO_PERMISSION)));
     }
 
     @Override
@@ -94,6 +95,6 @@ public class Discord implements ICommandAPI {
 
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
-        sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("discord.playerOnly")));
+        sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString(ConfigCommandPath.DISCORD_PLAYER_ONLY)));
     }
 }
