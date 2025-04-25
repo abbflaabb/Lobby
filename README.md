@@ -5,6 +5,7 @@ This is a custom Lobby plugin designed to enhance the server experience with ess
 
 ## Progress
 <div align="center">
+[![](https://jitpack.io/v/abbflaabb/Lobby.svg)](https://jitpack.io/#abbflaabb/Lobby)
 
 ![Java](https://img.shields.io/badge/Java-35%25-orange?style=for-the-badge&logo=java&logoColor=white)
 ![Last Updated](https://img.shields.io/badge/Last%20Updated-2025--03--27-blue?style=for-the-badge)
