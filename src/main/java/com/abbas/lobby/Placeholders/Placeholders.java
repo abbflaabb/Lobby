@@ -1,7 +1,7 @@
 package com.abbas.lobby.Placeholders;
 
-import com.abbas.lobby.API.ILuckPerms;
-import com.abbas.lobby.API.IPlaceholders;
+import com.abbas.lobby.API.MainAPIS.ILuckPerms;
+import com.abbas.lobby.API.MainAPIS.IPlaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import java.util.HashMap;
