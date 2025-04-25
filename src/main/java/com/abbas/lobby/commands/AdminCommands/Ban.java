@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.BanConfig;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
@@ -34,12 +35,14 @@ public class Ban implements ICommandAPI {
         Config.setup();
 
         if (!Config.getConfig().isConfigurationSection("banMessages")) {
-            Config.getConfig().set("banMessages.noPermission", "&c⚠ You do not have permission to ban players!");
-            Config.getConfig().set("banMessages.usage", "&c⚠ Usage: /ban <player> [duration] [reason]");
-            Config.getConfig().set("banMessages.playerNotFound", "&c⚠ Player not found!");
-            Config.getConfig().set("banMessages.success", "&a✔ Successfully banned %player% for %reason% (ID: %ban_id%)");
-            Config.getConfig().set("banMessages.forumLink", "&ehttps://example.com/appeal");
-            Config.getConfig().set("banMessages.playerOnly", "&c⚠ This command can only be used by players!");
+            Config.getConfig().set(ConfigCommandPath.BAN_NO_PERMISSION, "&c⚠ You do not have permission to ban players!");
+            Config.getConfig().set(ConfigCommandPath.BAN_USAGE, "&c⚠ Usage: /ban <player> [duration] [reason]");
+            Config.getConfig().set(ConfigCommandPath.BAN_PLAYER_NOT_FOUND, "&c⚠ Player not found!");
+            Config.getConfig().set(ConfigCommandPath.BAN_SUCCESS, "&a✔ Successfully banned %player% for %reason% (ID: %ban_id%)");
+            Config.getConfig().set(ConfigCommandPath.BAN_FORUM_LINK, "&ehttps://example.com/appeal");
+            Config.getConfig().set(ConfigCommandPath.BAN_PLAYER_ONLY, "&c⚠ This command can only be used by players!");
+            Config.getConfig().set(ConfigCommandPath.BAN_INVALID_DURATION, "&cInvalid duration format. Use s (seconds), m (minutes), h (hours), or d (days).");
+            Config.getConfig().set(ConfigCommandPath.BAN_EXPIRATION, "&aBan expires on %date%");
             Config.save();
         }
     }
@@ -56,14 +59,14 @@ public class Ban implements ICommandAPI {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("banMessages.usage")));
+            sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString(ConfigCommandPath.BAN_USAGE)));
             return true;
         }
 
         String targetName = args[0];
         Player target = Bukkit.getPlayer(targetName);
         if (target == null) {
-            sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString("banMessages.playerNotFound")));
+            sender.sendMessage(ColorUtils.translateColorCodes(Config.getConfig().getString(ConfigCommandPath.BAN_PLAYER_NOT_FOUND)));
             return true;
         }
 
@@ -83,7 +86,9 @@ public class Ban implements ICommandAPI {
                     reason = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
                 }
             } catch (NumberFormatException e) {
-                reason = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
+                sender.sendMessage(ColorUtils.translateColorCodes(
+                        Config.getConfig().getString(ConfigCommandPath.BAN_INVALID_DURATION)));
+                return;
             }
         }
 
@@ -96,7 +101,7 @@ public class Ban implements ICommandAPI {
 
         target.kickPlayer(ColorUtils.translateColorCodes(formatBanMessage(reason, expires, banId)));
 
-        String senderMessage = Config.getConfig().getString("banMessages.success")
+        String senderMessage = Config.getConfig().getString(ConfigCommandPath.BAN_SUCCESS)
                 .replace("%player%", targetName)
                 .replace("%reason%", reason)
                 .replace("%ban_id%", banId);
@@ -108,7 +113,7 @@ public class Ban implements ICommandAPI {
     }
 
     private void saveBanId(String playerName, String banId) {
-        Config.getConfig().set("banIds." + playerName, banId);
+        Config.getConfig().set(ConfigCommandPath.BAN_IDS + playerName, banId);
         Config.save();
     }
 
@@ -140,7 +145,7 @@ public class Ban implements ICommandAPI {
 
     private String formatBanMessage(String reason, Date expires, String banId) {
         String timeLeft = (expires != null) ? getTimeLeft(expires) : "Permanent";
-        String forumLink = Config.getConfig().getString("banMessages.forumLink");
+        String forumLink = Config.getConfig().getString(ConfigCommandPath.BAN_FORUM_LINK);
 
         return "§c§lLobbyBan§7» §cBanned for " + reason + "\n"
                 + "§4§oBanned by CONSOLE\n\n"
@@ -153,13 +158,19 @@ public class Ban implements ICommandAPI {
     }
 
     private static String getTimeLeft(Date expires) {
+        if (expires == null) {
+            return "Permanent";
+        }
+
         long diff = expires.getTime() - System.currentTimeMillis();
         long days = TimeUnit.MILLISECONDS.toDays(diff);
         long hours = TimeUnit.MILLISECONDS.toHours(diff) % 24;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(diff) % 60;
 
-        return days + "day(s) " + hours + "h " + minutes + "min and " + seconds + "sec";
+        String expirationMessage = Config.getConfig().getString(ConfigCommandPath.BAN_EXPIRATION)
+                .replace("%date%", days + "day(s) " + hours + "h " + minutes + "min and " + seconds + "sec");
+        return ColorUtils.translateColorCodes(expirationMessage);
     }
 
     private void startBanExpirationChecker() {
@@ -202,7 +213,7 @@ public class Ban implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("banMessages.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.BAN_NO_PERMISSION)));
     }
 
     @Override
@@ -213,6 +224,6 @@ public class Ban implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("banMessages.playerOnly", "&c⚠ This command can only be used by players!")));
+                Config.getConfig().getString(ConfigCommandPath.BAN_PLAYER_ONLY, "&c⚠ This command can only be used by players!")));
     }
 }
