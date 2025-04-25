@@ -1,6 +1,6 @@
 package com.abbas.lobby.Scoreboard;
 
-import com.abbas.lobby.API.ILuckPerms;
+import com.abbas.lobby.API.MainAPIS.ILuckPerms;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
