@@ -1,9 +1,9 @@
 package com.abbas.lobby.Scoreboard;
 
-import com.abbas.lobby.API.ICommandAPI;
-import com.abbas.lobby.API.IScoreboard;
+import com.abbas.lobby.API.ConfigAPI.ConfigPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
+import com.abbas.lobby.API.MainAPIS.IScoreboard;
 import com.abbas.lobby.Utils.ColorUtils;
-import com.abbas.lobby.Utils.Config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,11 +24,11 @@ public class ScoreBoardCommand implements ICommandAPI {
         ScoreBoardConfig.setupConfig();
         FileConfiguration config = ScoreBoardConfig.getConfig();
         if (!config.isConfigurationSection("scoreboard")) {
-            config.set("scoreboard.No-permission", "&c⚠ You do not have permission to toggle the scoreboard!");
-            config.set("scoreboard.enabled-message", "&a✔ Scoreboard enabled!");
-            config.set("scoreboard.disabled-message", "&c✖ Scoreboard disabled!");
-            config.set("scoreboard.error-message", "&c⚠ Error toggling scoreboard!");
-            config.set("scoreboard.player-only", "&c⚠ This command can only be used by players!");
+            config.set(ConfigPath.SCOREBOARD_NO_PERMISSION, "&c⚠ You do not have permission to toggle the scoreboard!");
+            config.set(ConfigPath.SCOREBOARD_ENABLED_MESSAGE, "&a✔ Scoreboard enabled!");
+            config.set(ConfigPath.SCOREBOARD_DISABLED_MESSAGE, "&c✖ Scoreboard disabled!");
+            config.set(ConfigPath.SCOREBOARD_ERROR_MESSAGE, "&c⚠ Error toggling scoreboard!");
+            config.set(ConfigPath.SCOREBOARD_PLAYER_ONLY, "&c⚠ This command can only be used by players!");
         }
     }
 
@@ -61,13 +61,13 @@ public class ScoreBoardCommand implements ICommandAPI {
         try {
             scoreboard.toggleScoreboardState(player.getUniqueId());
             String message = scoreboard.isScoreboardHidden(player.getUniqueId())
-                    ? ScoreBoardConfig.getConfig().getString("scoreboard.disabled-message")
-                    : ScoreBoardConfig.getConfig().getString("scoreboard.enabled-message");
+                    ? ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_DISABLED_MESSAGE)
+                    : ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_ENABLED_MESSAGE);
             player.sendMessage(ColorUtils.translateColorCodes(message));
             return true;
         } catch (Exception e) {
             player.sendMessage(ColorUtils.translateColorCodes(
-                    ScoreBoardConfig.getConfig().getString("scoreboard.error-message")));
+                    ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_ERROR_MESSAGE)));
             e.printStackTrace();
             return false;
         }
@@ -96,7 +96,7 @@ public class ScoreBoardCommand implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                ScoreBoardConfig.getConfig().getString("scoreboard.No-permission")));
+                ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_NO_PERMISSION)));
     }
 
     @Override
@@ -107,6 +107,6 @@ public class ScoreBoardCommand implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                ScoreBoardConfig.getConfig().getString("scoreboard.player-only")));
+                ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_PLAYER_ONLY)));
     }
 }
