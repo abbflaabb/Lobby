@@ -1,26 +1,32 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
-import com.abbas.lobby.BossBar.BossBarConfig;
-import com.abbas.lobby.Scoreobard.ScoreBoardConfig;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
+import com.abbas.lobby.Scoreboard.ScoreBoardConfig;
 import com.abbas.lobby.Utils.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ReloadConfigs implements ICommandAPI {
     private static final String COMMAND_NAME = "reloadconfig";
     private static final String PERMISSION_NODE = "lobby.reloadconfig";
 
+    public ReloadConfigs() {
+        setupConfig();
+    }
+
     @Override
     public void setupConfig() {
         Config.setup();
-        if (!Config.getConfig().isConfigurationSection("reloadMessages")) {
-            Config.getConfig().set("reloadMessages.noPermission", "&c⚠ You do not have permission to reload configurations!");
-            Config.getConfig().set("reloadMessages.success", "&a✔ Configuration reloaded successfully.");
+        FileConfiguration config = Config.getConfig();
+        if (!config.isConfigurationSection("adminMessages.reload")) {
+            config.set(ConfigCommandPath.ADMIN_RELOAD_NO_PERMISSION, "&c⚠ You do not have permission to reload configurations!");
+            config.set(ConfigCommandPath.ADMIN_RELOAD_SUCCESS, "&a✔ Configuration reloaded successfully.");
+            config.set(ConfigCommandPath.ADMIN_RELOAD_ERROR, "&c⚠ Error reloading configurations!");
             Config.save();
         }
     }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(getCommandName())) {
@@ -32,20 +38,27 @@ public class ReloadConfigs implements ICommandAPI {
             return true;
         }
 
-        reloadAllConfigs();
-        sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("reloadMessages.success")));
-        return true;
+        return reloadConfigurations(sender);
     }
 
-    private void reloadAllConfigs() {
-        Config.setup();
-        BanConfig.setupConfig();
-        UnbanConfig.setupConfig();
-        ScoreBoardConfig.setupConfig();
-        MuteConfig.setupConfig();
-        WarnConfig.setupConfig();
-        BossBarConfig.reload();
+    private boolean reloadConfigurations(CommandSender sender) {
+        try {
+            Config.setup();
+            BanConfig.setupConfig();
+            UnbanConfig.setupConfig();
+            ScoreBoardConfig.setupConfig();
+            MuteConfig.setupConfig();
+            WarnConfig.setupConfig();
+
+            sender.sendMessage(ColorUtils.translateColorCodes(
+                    Config.getConfig().getString(ConfigCommandPath.ADMIN_RELOAD_SUCCESS)));
+            return true;
+        } catch (Exception e) {
+            sender.sendMessage(ColorUtils.translateColorCodes(
+                    Config.getConfig().getString(ConfigCommandPath.ADMIN_RELOAD_ERROR)));
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -71,7 +84,7 @@ public class ReloadConfigs implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("reloadMessages.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.ADMIN_RELOAD_NO_PERMISSION)));
     }
 
     @Override
