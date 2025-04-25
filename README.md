@@ -83,7 +83,8 @@ public class CustomPlaceholder {
     public String processText(String text, Player player) {
         return placeholderManager.replacePlaceholders(text, player);
     }
-} ```
+}
+```
 ## License
 This plugin is protected under copyright law. All rights reserved.
 
