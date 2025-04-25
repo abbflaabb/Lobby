@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,14 +24,14 @@ public class Ping implements ICommandAPI {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("ping")) {
-            config.set("ping.noPermission", "&c⚠ You do not have permission to use this command!");
-            config.set("ping.playerOnly", "&c⚠ Console cannot use this command!");
-            config.set("ping.selfPing", "&7Your ping is: &a%ping%ms");
-            config.set("ping.quality.excellent", "&2Excellent");
-            config.set("ping.quality.good", "&aGood");
-            config.set("ping.quality.moderate", "&eModerate");
-            config.set("ping.quality.poor", "&cPoor");
-            config.set("ping.quality.bad", "&4Bad");
+            config.set(ConfigCommandPath.PING_NO_PERMISSION, "&c⚠ You do not have permission to use this command!");
+            config.set(ConfigCommandPath.PING_PLAYER_ONLY, "&c⚠ Console cannot use this command!");
+            config.set(ConfigCommandPath.PING_SELF_PING, "&7Your ping is: &a%ping%ms");
+            config.set(ConfigCommandPath.PING_QUALITY_EXCELLENT, "&2Excellent");
+            config.set(ConfigCommandPath.PING_QUALITY_GOOD, "&aGood");
+            config.set(ConfigCommandPath.PING_QUALITY_MODERATE, "&eModerate");
+            config.set(ConfigCommandPath.PING_QUALITY_POOR, "&cPoor");
+            config.set(ConfigCommandPath.PING_QUALITY_BAD, "&4Bad");
             Config.save();
         }
     }
@@ -59,7 +60,7 @@ public class Ping implements ICommandAPI {
         int ping = ((CraftPlayer) player).getHandle().ping;
         String quality = getPingQuality(ping, config);
 
-        String message = config.getString("ping.selfPing")
+        String message = config.getString(ConfigCommandPath.PING_SELF_PING)
                 .replace("%ping%", String.valueOf(ping))
                 + " " + quality;
 
@@ -67,12 +68,13 @@ public class Ping implements ICommandAPI {
     }
 
     private String getPingQuality(int ping, FileConfiguration config) {
-        if (ping < 30) return config.getString("ping.quality.excellent");
-        if (ping < 60) return config.getString("ping.quality.good");
-        if (ping < 100) return config.getString("ping.quality.moderate");
-        if (ping < 150) return config.getString("ping.quality.poor");
-        return config.getString("ping.quality.bad");
+        if (ping < 30) return config.getString(ConfigCommandPath.PING_QUALITY_EXCELLENT);
+        if (ping < 60) return config.getString(ConfigCommandPath.PING_QUALITY_GOOD);
+        if (ping < 100) return config.getString(ConfigCommandPath.PING_QUALITY_MODERATE);
+        if (ping < 150) return config.getString(ConfigCommandPath.PING_QUALITY_POOR);
+        return config.getString(ConfigCommandPath.PING_QUALITY_BAD);
     }
+
 
     @Override
     public boolean hasPermission(CommandSender sender) {
@@ -97,7 +99,7 @@ public class Ping implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("ping.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.PING_NO_PERMISSION)));
     }
 
     @Override
@@ -108,6 +110,6 @@ public class Ping implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("ping.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.PING_PLAYER_ONLY)));
     }
 }
