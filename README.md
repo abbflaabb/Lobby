@@ -58,7 +58,8 @@ Required for optimal functionality:
 
 
 ##How To Use API
-</ import com.abbas.lobby.API.IPlaceholders;
+```java Example For Use IPlaceholders
+import com.abbas.lobby.API.IPlaceholders;
 import org.bukkit.entity.Player;
 
 public class CustomPlaceholder {
@@ -84,7 +85,37 @@ public class CustomPlaceholder {
         return placeholderManager.replacePlaceholders(text, player);
     }
 }
->
+
+Example For Use Placeholder in Listener
+package UseAPI;
+
+import com.abbas.lobby.API.IPlaceholders;
+import org.bukkit.entity.Player;
+
+public class CustomPlaceholder {
+    private final IPlaceholders placeholderManager;
+
+    public CustomPlaceholder(IPlaceholders placeholderManager) {
+        this.placeholderManager = placeholderManager;
+        registerPlaceholders();
+    }
+
+    private void registerPlaceholders() {
+        // Register health placeholder
+        placeholderManager.addPlaceholder("%player_health%",
+                player -> String.valueOf(player.getHealth()));
+
+        // You can add more custom placeholders here
+        placeholderManager.addPlaceholder("%player_food%",
+                player -> String.valueOf(player.getFoodLevel()));
+    }
+
+    // Example usage method
+    public String processText(String text, Player player) {
+        return placeholderManager.replacePlaceholders(text, player);
+    }
+}
+```
 ## License
 This plugin is protected under copyright law. All rights reserved.
 
