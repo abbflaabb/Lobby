@@ -1,7 +1,8 @@
 package com.abbas.lobby.SubTitle;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigPath;
+import com.abbas.lobby.API.MainAPIS.ISubTitle;
 import com.abbas.lobby.Placeholders.Placeholders;
-import com.abbas.lobby.API.ISubTitle;
 import com.abbas.lobby.Scoreboard.LuckPermsRank;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
@@ -19,22 +20,21 @@ public class SubTitle implements ISubTitle {
         setupConfig();
     }
 
-
     @Override
     public void setupConfig() {
         Config.setup();
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("titles")) {
-            config.set("titles.welcome.title", "&6&l%Lobby_rank%");
-            config.set("titles.welcome.subtitle", "&7Welcome &b%player_name%");
-            config.set("titles.welcome.fadeIn", 20);
-            config.set("titles.welcome.stay", 60);
-            config.set("titles.welcome.fadeOut", 20);
-
+            config.set(ConfigPath.TITLES_WELCOME_TITLE, "&6&l%Lobby_rank%");
+            config.set(ConfigPath.TITLES_WELCOME_SUBTITLE, "&7Welcome &b%player_name%");
+            config.set(ConfigPath.TITLES_WELCOME_FADEIN, 20);
+            config.set(ConfigPath.TITLES_WELCOME_STAY, 60);
+            config.set(ConfigPath.TITLES_WELCOME_FADEOUT, 20);
             Config.save();
         }
     }
+
     @Override
     public void sendTitle(Player player, String type) {
         FileConfiguration config = Config.getConfig();
@@ -64,7 +64,6 @@ public class SubTitle implements ISubTitle {
 
         sendTitlePacket(player, title, subtitle, fadeIn, stay, fadeOut);
     }
-
     @Override
     public void sendTitlePacket(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
