@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import com.abbas.lobby.Utils.UnbanConfig;
@@ -21,10 +22,10 @@ public class Unban implements ICommandAPI {
       UnbanConfig.setupConfig();
       Config.setup();
       if (!Config.getConfig().isConfigurationSection("unbanMessages")) {
-         Config.getConfig().set("unbanMessages.noPermission", "&c⚠ You do not have permission to unban players!");
-         Config.getConfig().set("unbanMessages.usage", "&c⚠ Usage: /unban <player>");
-         Config.getConfig().set("unbanMessages.notBanned", "&c⚠ That player is not banned!");
-         Config.getConfig().set("unbanMessages.success", "&a✔ Successfully unbanned %player%");
+         Config.getConfig().set(ConfigCommandPath.UNBAN_NO_PERMISSION, "&c⚠ You do not have permission to unban players!");
+         Config.getConfig().set(ConfigCommandPath.UNBAN_USAGE, "&c⚠ Usage: /unban <player>");
+         Config.getConfig().set(ConfigCommandPath.UNBAN_NOT_BANNED, "&c⚠ That player is not banned!");
+         Config.getConfig().set(ConfigCommandPath.UNBAN_SUCCESS, "&a✔ Successfully unbanned %player%");
          Config.save();
       }
    }
@@ -42,7 +43,7 @@ public class Unban implements ICommandAPI {
 
       if (args.length != 1) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("unbanMessages.usage")));
+                 Config.getConfig().getString(ConfigCommandPath.UNBAN_USAGE)));
          return true;
       }
 
@@ -55,17 +56,16 @@ public class Unban implements ICommandAPI {
          removeBanId(target);
 
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("unbanMessages.success")
+                 Config.getConfig().getString(ConfigCommandPath.UNBAN_SUCCESS)
                          .replace("%player%", target)));
       } else {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("unbanMessages.notBanned")));
+                 Config.getConfig().getString(ConfigCommandPath.UNBAN_NOT_BANNED)));
       }
       return true;
    }
-
    private void removeBanId(String playerName) {
-      Config.getConfig().set("banIds." + playerName.toLowerCase(), null);
+      Config.getConfig().set(ConfigCommandPath.BAN_IDS + playerName.toLowerCase(), null);
       Config.save();
    }
 
@@ -92,9 +92,8 @@ public class Unban implements ICommandAPI {
    @Override
    public void sendNoPermissionMessage(CommandSender sender) {
       sender.sendMessage(ColorUtils.translateColorCodes(
-              Config.getConfig().getString("unbanMessages.noPermission")));
+              Config.getConfig().getString(ConfigCommandPath.UNBAN_NO_PERMISSION)));
    }
-
    @Override
    public boolean isPlayerOnly() {
       return false;
