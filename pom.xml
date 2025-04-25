@@ -69,7 +69,7 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>provided</scope> <!-- Use 'compile' if you're shading the plugin -->
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
