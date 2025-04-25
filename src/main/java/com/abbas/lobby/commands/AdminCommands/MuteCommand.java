@@ -1,12 +1,12 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import com.abbas.lobby.Utils.MuteConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -29,22 +29,25 @@ public class MuteCommand implements ICommandAPI {
       setupConfig();
    }
 
+   @Override
    public void setupConfig() {
       MuteConfig.setupConfig();
       Config.setup();
 
       FileConfiguration config = Config.getConfig();
       if (!config.isConfigurationSection("muteMessages")) {
-         config.set("muteMessages.noPermission", "&c⚠ You do not have permission to mute players!");
-         config.set("muteMessages.usage", "&c⚠ Usage: /mute <player> [duration] [reason]");
-         config.set("muteMessages.playerNotFound", "&c⚠ Player not found!");
-         config.set("muteMessages.exempt", "&c⚠ This player cannot be muted!");
-         config.set("muteMessages.alreadyMuted", "&c⚠ This player is already muted!");
-         config.set("muteMessages.invalidDuration", "&c⚠ Invalid duration format! Use s/m/h/d");
-         config.set("muteMessages.playerMuted", "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-         config.set("muteMessages.playerMutedPermanent", "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-         config.set("muteMessages.success", "&a✔ Successfully muted %player% for %duration% (ID: %mute_id%)");
-         config.set("muteMessages.successPermanent", "&a✔ Successfully muted %player% permanently (ID: %mute_id%)");
+         config.set(ConfigCommandPath.MUTE_NO_PERMISSION, "&c⚠ You do not have permission to mute players!");
+         config.set(ConfigCommandPath.MUTE_USAGE, "&c⚠ Usage: /mute <player> [duration] [reason]");
+         config.set(ConfigCommandPath.MUTE_PLAYER_NOT_FOUND, "&c⚠ Player not found!");
+         config.set(ConfigCommandPath.MUTE_EXEMPT, "&c⚠ This player cannot be muted!");
+         config.set(ConfigCommandPath.MUTE_ALREADY_MUTED, "&c⚠ This player is already muted!");
+         config.set(ConfigCommandPath.MUTE_INVALID_DURATION, "&c⚠ Invalid duration format! Use s/m/h/d");
+         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED, "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
+         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED_PERMANENT, "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
+         config.set(ConfigCommandPath.MUTE_SUCCESS, "&a✔ Successfully muted %player% for %duration% (ID: %mute_id%)");
+         config.set(ConfigCommandPath.MUTE_SUCCESS_PERMANENT, "&a✔ Successfully muted %player% permanently (ID: %mute_id%)");
+         config.set(ConfigCommandPath.MUTE_STAFF_NOTIFICATION,
+                 "&7[Staff] &e%player% &7was muted by &e%muter% &7for: &e%reason%. Mute ID: &e%mute_id%");
          Config.save();
       }
 
@@ -65,12 +68,13 @@ public class MuteCommand implements ICommandAPI {
 
       if (args.length < 2) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("muteMessages.usage")));
+                 Config.getConfig().getString(ConfigCommandPath.MUTE_USAGE)));
          return true;
       }
 
       return processMute(sender, args);
    }
+
 
    private boolean processMute(CommandSender sender, String[] args) {
       FileConfiguration config = Config.getConfig();
@@ -79,19 +83,19 @@ public class MuteCommand implements ICommandAPI {
 
       if (target == null) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.playerNotFound")));
+                 config.getString(ConfigCommandPath.MUTE_PLAYER_NOT_FOUND)));
          return true;
       }
 
       if (target.hasPermission(PERMISSION_EXEMPT)) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.exempt")));
+                 config.getString(ConfigCommandPath.MUTE_EXEMPT)));
          return true;
       }
 
       if (mutedPlayers.containsKey(target.getUniqueId())) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.alreadyMuted")));
+                 config.getString(ConfigCommandPath.MUTE_ALREADY_MUTED)));
          return true;
       }
 
@@ -137,25 +141,25 @@ public class MuteCommand implements ICommandAPI {
          String durationFormatted = formatDuration(duration);
 
          target.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.playerMuted")
+                 config.getString(ConfigCommandPath.MUTE_PLAYER_MUTED)
                          .replace("%duration%", durationFormatted)
                          .replace("%reason%", reason)
                          .replace("%mute_id%", muteId)));
 
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.success")
+                 config.getString(ConfigCommandPath.MUTE_SUCCESS)
                          .replace("%player%", target.getName())
                          .replace("%duration%", durationFormatted)
                          .replace("%mute_id%", muteId)));
       } else {
          mutedPlayers.put(target.getUniqueId(), null);
          target.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.playerMutedPermanent")
+                 config.getString(ConfigCommandPath.MUTE_PLAYER_MUTED_PERMANENT)
                          .replace("%reason%", reason)
                          .replace("%mute_id%", muteId)));
 
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.successPermanent")
+                 config.getString(ConfigCommandPath.MUTE_SUCCESS_PERMANENT)
                          .replace("%player%", target.getName())
                          .replace("%mute_id%", muteId)));
       }
@@ -206,9 +210,12 @@ public class MuteCommand implements ICommandAPI {
    }
 
    private void notifyStaff(CommandSender sender, Player target, String reason) {
-      String staffMessage = ColorUtils.translateColorCodes("&7[Staff] &e" + target.getName() +
-              "&7 was muted by &e" + (sender instanceof Player ? sender.getName() : "Console") +
-              "&7 for: &e" + reason);
+      String staffMessage = ColorUtils.translateColorCodes(
+              Config.getConfig().getString(ConfigCommandPath.MUTE_STAFF_NOTIFICATION)
+                      .replace("%player%", target.getName())
+                      .replace("%muter%", sender instanceof Player ? sender.getName() : "Console")
+                      .replace("%reason%", reason)
+                      .replace("%mute_id%", getMuteId(target.getName())));
 
       for (Player player : Bukkit.getOnlinePlayers()) {
          if (player.hasPermission(PERMISSION_MUTE) && player != sender && player != target) {
@@ -312,7 +319,7 @@ public class MuteCommand implements ICommandAPI {
    @Override
    public void sendNoPermissionMessage(CommandSender sender) {
       sender.sendMessage(ColorUtils.translateColorCodes(
-              Config.getConfig().getString("muteMessages.noPermission")));
+              Config.getConfig().getString(ConfigCommandPath.MUTE_NO_PERMISSION)));
    }
 
    @Override
