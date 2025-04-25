@@ -1,5 +1,4 @@
 # Lobby Plugin
-[![](https://jitpack.io/v/abbflaabb/Lobby.svg)](https://jitpack.io/#abbflaabb/Lobby)
 
 ## Description
 This is a custom Lobby plugin designed to enhance the server experience with essential lobby functionality, including player management, teleportation systems, and server navigation features. The plugin provides a seamless hub experience for players connecting to the server.
