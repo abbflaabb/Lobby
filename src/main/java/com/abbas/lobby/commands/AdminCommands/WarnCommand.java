@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import com.abbas.lobby.Utils.WarnConfig;
@@ -25,15 +26,15 @@ public class WarnCommand implements ICommandAPI {
       Config.setup();
       FileConfiguration config = Config.getConfig();
       if (!config.isConfigurationSection("warnMessages.warn")) {
-         config.set("warnMessages.warn.noPermission", "&c⚠ You do not have permission to warn players!");
-         config.set("warnMessages.warn.usage", "&c⚠ Usage: /warn <player> <reason>");
-         config.set("warnMessages.warn.playerNotFound", "&c⚠ Player %player% not found!");
-         config.set("warnMessages.warn.exempt", "&c⚠ You cannot warn this player!");
-         config.set("warnMessages.warn.header", "&7&m---------------------");
-         config.set("warnMessages.warn.warningMessage", "&c⚠ You have been warned by &e%sender%");
-         config.set("warnMessages.warn.reasonMessage", "&7Reason: &f%reason%");
-         config.set("warnMessages.warn.success", "&a✔ Successfully warned %player% for: %reason%");
-         config.set("warnMessages.warn.staffNotification", "&7[Staff] &e%player% &7was warned by &e%sender% &7for: &f%reason%");
+         config.set(ConfigCommandPath.WARN_NO_PERMISSION, "&c⚠ You do not have permission to warn players!");
+         config.set(ConfigCommandPath.WARN_USAGE, "&c⚠ Usage: /warn <player> <reason>");
+         config.set(ConfigCommandPath.WARN_PLAYER_NOT_FOUND, "&c⚠ Player %player% not found!");
+         config.set(ConfigCommandPath.WARN_EXEMPT, "&c⚠ You cannot warn this player!");
+         config.set(ConfigCommandPath.WARN_HEADER, "&7&m---------------------");
+         config.set(ConfigCommandPath.WARN_WARNING_MESSAGE, "&c⚠ You have been warned by &e%sender%");
+         config.set(ConfigCommandPath.WARN_REASON_MESSAGE, "&7Reason: &f%reason%");
+         config.set(ConfigCommandPath.WARN_SUCCESS, "&a✔ Successfully warned %player% for: %reason%");
+         config.set(ConfigCommandPath.WARN_STAFF_NOTIFICATION, "&7[Staff] &e%player% &7was warned by &e%sender% &7for: &f%reason%");
          Config.save();
       }
    }
@@ -51,7 +52,7 @@ public class WarnCommand implements ICommandAPI {
 
       if (args.length < 2) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("warnMessages.warn.usage")));
+                 Config.getConfig().getString(ConfigCommandPath.WARN_USAGE)));
          return true;
       }
 
@@ -65,14 +66,14 @@ public class WarnCommand implements ICommandAPI {
 
       if (target == null) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("warnMessages.warn.playerNotFound")
+                 config.getString(ConfigCommandPath.WARN_PLAYER_NOT_FOUND)
                          .replace("%player%", playerName)));
          return true;
       }
 
       if (target.hasPermission(EXEMPT_PERMISSION)) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("warnMessages.warn.exempt")));
+                 config.getString(ConfigCommandPath.WARN_EXEMPT)));
          return true;
       }
 
@@ -94,25 +95,27 @@ public class WarnCommand implements ICommandAPI {
       FileConfiguration config = Config.getConfig();
 
       target.sendMessage("");
-      target.sendMessage(ColorUtils.translateColorCodes(config.getString("warnMessages.warn.header")));
       target.sendMessage(ColorUtils.translateColorCodes(
-              config.getString("warnMessages.warn.warningMessage")
+              config.getString(ConfigCommandPath.WARN_HEADER)));
+      target.sendMessage(ColorUtils.translateColorCodes(
+              config.getString(ConfigCommandPath.WARN_WARNING_MESSAGE)
                       .replace("%sender%", sender.getName())));
       target.sendMessage(ColorUtils.translateColorCodes(
-              config.getString("warnMessages.warn.reasonMessage")
+              config.getString(ConfigCommandPath.WARN_REASON_MESSAGE)
                       .replace("%reason%", reason)));
-      target.sendMessage(ColorUtils.translateColorCodes(config.getString("warnMessages.warn.header")));
+      target.sendMessage(ColorUtils.translateColorCodes(
+              config.getString(ConfigCommandPath.WARN_HEADER)));
       target.sendMessage("");
 
       sender.sendMessage(ColorUtils.translateColorCodes(
-              config.getString("warnMessages.warn.success")
+              config.getString(ConfigCommandPath.WARN_SUCCESS)
                       .replace("%player%", target.getName())
                       .replace("%reason%", reason)));
    }
 
    private void notifyStaff(CommandSender sender, Player target, String reason) {
       String staffMessage = ColorUtils.translateColorCodes(
-              Config.getConfig().getString("warnMessages.warn.staffNotification")
+              Config.getConfig().getString(ConfigCommandPath.WARN_STAFF_NOTIFICATION)
                       .replace("%player%", target.getName())
                       .replace("%sender%", sender instanceof Player ? sender.getName() : "Console")
                       .replace("%reason%", reason));
@@ -149,7 +152,7 @@ public class WarnCommand implements ICommandAPI {
    @Override
    public void sendNoPermissionMessage(CommandSender sender) {
       sender.sendMessage(ColorUtils.translateColorCodes(
-              Config.getConfig().getString("warnMessages.warn.noPermission")));
+              Config.getConfig().getString(ConfigCommandPath.WARN_NO_PERMISSION)));
    }
 
    @Override
