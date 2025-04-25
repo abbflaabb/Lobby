@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.Bukkit;
@@ -22,13 +23,13 @@ public class UnmuteCommand implements ICommandAPI {
       Config.setup();
       FileConfiguration config = Config.getConfig();
       if (!config.isConfigurationSection("muteMessages.unmute")) {
-         config.set("muteMessages.unmute.noPermission", "&c⚠ You do not have permission to unmute players!");
-         config.set("muteMessages.unmute.usage", "&c⚠ Usage: /unmute <player>");
-         config.set("muteMessages.unmute.notMuted", "&c⚠ That player is not muted!");
-         config.set("muteMessages.unmute.notFound", "&c⚠ Player not found or is offline!");
-         config.set("muteMessages.unmute.success", "&a✔ Successfully unmuted %player%");
-         config.set("muteMessages.unmute.target", "&a✔ You have been unmuted!");
-         config.set("muteMessages.staff.unmuteNotification", "&7[Staff] &e%player% &7was unmuted by &e%unmuter%");
+         config.set(ConfigCommandPath.UNMUTE_NO_PERMISSION, "&c⚠ You do not have permission to unmute players!");
+         config.set(ConfigCommandPath.UNMUTE_USAGE, "&c⚠ Usage: /unmute <player>");
+         config.set(ConfigCommandPath.UNMUTE_NOT_MUTED, "&c⚠ That player is not muted!");
+         config.set(ConfigCommandPath.UNMUTE_NOT_FOUND, "&c⚠ Player not found or is offline!");
+         config.set(ConfigCommandPath.UNMUTE_SUCCESS, "&a✔ Successfully unmuted %player%");
+         config.set(ConfigCommandPath.UNMUTE_TARGET, "&a✔ You have been unmuted!");
+         config.set(ConfigCommandPath.UNMUTE_STAFF_NOTIFICATION, "&7[Staff] &e%player% &7was unmuted by &e%unmuter%");
          Config.save();
       }
    }
@@ -46,7 +47,7 @@ public class UnmuteCommand implements ICommandAPI {
 
       if (args.length < 1) {
          sender.sendMessage(ColorUtils.translateColorCodes(
-                 Config.getConfig().getString("muteMessages.unmute.usage")));
+                 Config.getConfig().getString(ConfigCommandPath.UNMUTE_USAGE)));
          return true;
       }
 
@@ -63,7 +64,7 @@ public class UnmuteCommand implements ICommandAPI {
             if (onlinePlayer.getName().equalsIgnoreCase(playerName)) {
                if (!MuteCommand.isPlayerMuted(onlinePlayer.getUniqueId())) {
                   sender.sendMessage(ColorUtils.translateColorCodes(
-                          config.getString("muteMessages.unmute.notMuted")));
+                          config.getString(ConfigCommandPath.UNMUTE_NOT_MUTED)));
                   return true;
                }
                MuteCommand.unmute(onlinePlayer.getUniqueId());
@@ -75,25 +76,25 @@ public class UnmuteCommand implements ICommandAPI {
 
          if (!found) {
             sender.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("muteMessages.unmute.notFound")));
+                    config.getString(ConfigCommandPath.UNMUTE_NOT_FOUND)));
             return true;
          }
       } else {
          if (!MuteCommand.isPlayerMuted(target.getUniqueId())) {
             sender.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("muteMessages.unmute.notMuted")));
+                    config.getString(ConfigCommandPath.UNMUTE_NOT_MUTED)));
             return true;
          }
          MuteCommand.unmute(target.getUniqueId());
       }
 
       sender.sendMessage(ColorUtils.translateColorCodes(
-              config.getString("muteMessages.unmute.success")
+              config.getString(ConfigCommandPath.UNMUTE_SUCCESS)
                       .replace("%player%", playerName)));
 
       if (target != null) {
          target.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString("muteMessages.unmute.target")));
+                 config.getString(ConfigCommandPath.UNMUTE_TARGET)));
       }
 
       notifyStaff(sender, playerName, target);
@@ -102,7 +103,7 @@ public class UnmuteCommand implements ICommandAPI {
 
    private void notifyStaff(CommandSender sender, String playerName, Player target) {
       String staffMessage = ColorUtils.translateColorCodes(
-              Config.getConfig().getString("muteMessages.staff.unmuteNotification")
+              Config.getConfig().getString(ConfigCommandPath.UNMUTE_STAFF_NOTIFICATION)
                       .replace("%player%", playerName)
                       .replace("%unmuter%", sender instanceof Player ? sender.getName() : "Console"));
 
@@ -136,7 +137,7 @@ public class UnmuteCommand implements ICommandAPI {
    @Override
    public void sendNoPermissionMessage(CommandSender sender) {
       sender.sendMessage(ColorUtils.translateColorCodes(
-              Config.getConfig().getString("muteMessages.unmute.noPermission")));
+              Config.getConfig().getString(ConfigCommandPath.UNMUTE_NO_PERMISSION)));
    }
 
    @Override
