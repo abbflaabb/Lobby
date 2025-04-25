@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.Bukkit;
@@ -20,13 +21,13 @@ public class Kick implements ICommandAPI {
     public void setupConfig() {
         Config.setup();
         if (!Config.getConfig().isConfigurationSection("kickMessages")) {
-            Config.getConfig().set("kickMessages.noPermission", "&c⚠ You do not have permission to kick players!");
-            Config.getConfig().set("kickMessages.usage", "&c⚠ Usage: /kick <player> [reason]");
-            Config.getConfig().set("kickMessages.playerNotFound", "&c⚠ Player not online!");
-            Config.getConfig().set("kickMessages.success", "&a✔ Successfully kicked %player% for: %reason%");
-            Config.getConfig().set("kickMessages.defaultReason", "You have been kicked from the server!");
-            Config.getConfig().set("kickMessages.kickFormat", "&c⚠ You were kicked!\n&7Reason: &f%reason%");
-            Config.getConfig().set("kickMessages.playerOnly", "&c⚠ This command can only be used by players!");
+            Config.getConfig().set(ConfigCommandPath.KICK_NO_PERMISSION, "&c⚠ You do not have permission to kick players!");
+            Config.getConfig().set(ConfigCommandPath.KICK_USAGE, "&c⚠ Usage: /kick <player> [reason]");
+            Config.getConfig().set(ConfigCommandPath.KICK_PLAYER_NOT_FOUND, "&c⚠ Player not online!");
+            Config.getConfig().set(ConfigCommandPath.KICK_SUCCESS, "&a✔ Successfully kicked %player% for: %reason%");
+            Config.getConfig().set(ConfigCommandPath.KICK_DEFAULT_REASON, "You have been kicked from the server!");
+            Config.getConfig().set(ConfigCommandPath.KICK_FORMAT, "&c⚠ You were kicked!\n&7Reason: &f%reason%");
+            Config.getConfig().set(ConfigCommandPath.KICK_PLAYER_ONLY, "&c⚠ This command can only be used by players!");
             Config.save();
         }
     }
@@ -49,7 +50,7 @@ public class Kick implements ICommandAPI {
 
         if (args.length < 1) {
             sender.sendMessage(ColorUtils.translateColorCodes(
-                    Config.getConfig().getString("kickMessages.usage")));
+                    Config.getConfig().getString(ConfigCommandPath.KICK_USAGE)));
             return true;
         }
 
@@ -60,20 +61,20 @@ public class Kick implements ICommandAPI {
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
             sender.sendMessage(ColorUtils.translateColorCodes(
-                    Config.getConfig().getString("kickMessages.playerNotFound")));
+                    Config.getConfig().getString(ConfigCommandPath.KICK_PLAYER_NOT_FOUND)));
             return true;
         }
 
-        String reason = Config.getConfig().getString("kickMessages.defaultReason");
+        String reason = Config.getConfig().getString(ConfigCommandPath.KICK_DEFAULT_REASON);
         if (args.length > 1) {
             reason = String.join(" ", args).substring(args[0].length()).trim();
         }
 
-        String kickMessage = Config.getConfig().getString("kickMessages.kickFormat")
+        String kickMessage = Config.getConfig().getString(ConfigCommandPath.KICK_FORMAT)
                 .replace("%reason%", reason);
         target.kickPlayer(ColorUtils.translateColorCodes(kickMessage));
 
-        String successMessage = Config.getConfig().getString("kickMessages.success")
+        String successMessage = Config.getConfig().getString(ConfigCommandPath.KICK_SUCCESS)
                 .replace("%player%", target.getName())
                 .replace("%reason%", reason);
         sender.sendMessage(ColorUtils.translateColorCodes(successMessage));
@@ -104,7 +105,7 @@ public class Kick implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("kickMessages.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.KICK_NO_PERMISSION)));
     }
 
     @Override
@@ -115,6 +116,6 @@ public class Kick implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("kickMessages.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.KICK_PLAYER_ONLY)));
     }
 }
