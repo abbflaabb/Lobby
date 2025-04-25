@@ -45,7 +45,7 @@ commands:
   unmute:
     description: Unmute a player
     usage: /<command>
-  bossbarreload:
+  sb:
     usage: /<command>
 
 permissions:
