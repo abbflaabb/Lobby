@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -18,8 +19,6 @@ public class hub implements ICommandAPI, TabCompleter {
 
     private Map<String, List<String>> commandCategories;
     private Set<UUID> cooldowns;
-
-
 
     public hub() {
         this.commandCategories = new HashMap<>();
@@ -40,14 +39,14 @@ public class hub implements ICommandAPI, TabCompleter {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("lobby")) {
-            config.set("lobby.noPermission", "&c⚠ You do not have permission to use this command!");
-            config.set("lobby.playerOnly", "&c⚠ Console cannot use this command!");
-            config.set("lobby.cooldown", "&c⚠ Please wait %time% seconds before using this command again!");
-            config.set("lobby.header", "&8&l≪ &6&lLobby Commands &8&l≫");
-            config.set("lobby.footer", "&8&l≪ &6&lEnd of Commands &8&l≫");
-            config.set("lobby.generalCommands", "&a&lGeneral Commands:");
-            config.set("lobby.premiumCommands", "&b&lPremium Commands:");
-            config.set("lobby.adminCommands", "&c&lAdmin Commands:");
+            config.set(ConfigCommandPath.LOBBY_NO_PERMISSION, "&c⚠ You do not have permission to use this command!");
+            config.set(ConfigCommandPath.LOBBY_PLAYER_ONLY, "&c⚠ Console cannot use this command!");
+            config.set(ConfigCommandPath.LOBBY_COOLDOWN, "&c⚠ Please wait %time% seconds before using this command again!");
+            config.set(ConfigCommandPath.LOBBY_HEADER, "&8&l≪ &6&lLobby Commands &8&l≫");
+            config.set(ConfigCommandPath.LOBBY_FOOTER, "&8&l≪ &6&lEnd of Commands &8&l≫");
+            config.set(ConfigCommandPath.LOBBY_GENERAL_COMMANDS, "&a&lGeneral Commands:");
+            config.set(ConfigCommandPath.LOBBY_PREMIUM_COMMANDS, "&b&lPremium Commands:");
+            config.set(ConfigCommandPath.LOBBY_ADMIN_COMMANDS, "&c&lAdmin Commands:");
 
             setupCommandList(config);
             Config.save();
@@ -80,9 +79,7 @@ public class hub implements ICommandAPI, TabCompleter {
         adminCommands.put("vanish", "Toggle visibility");
         adminCommands.put("warn", "Warn a player");
 
-
         List<String> formattedCommands = new ArrayList<>();
-
         formattedCommands.add("&6&lGeneral Commands:");
         generalCommands.forEach((cmd, desc) ->
                 formattedCommands.add("&7➤ &e/" + cmd + " &8- &7" + desc));
@@ -95,7 +92,8 @@ public class hub implements ICommandAPI, TabCompleter {
         formattedCommands.add("");
         adminCommands.forEach((cmd, desc) ->
                 formattedCommands.add("&7➤ &c/" + cmd + " &8- &7" + desc));
-        config.set("lobby.commandList", formattedCommands);
+
+        config.set(ConfigCommandPath.LOBBY_COMMAND_LIST, formattedCommands);
         Config.save();
     }
 
@@ -129,16 +127,16 @@ public class hub implements ICommandAPI, TabCompleter {
     }
 
     private void sendCooldownMessage(Player player) {
-        String message = Config.getConfig().getString("lobby.cooldown")
+        String message = Config.getConfig().getString(ConfigCommandPath.LOBBY_COOLDOWN)
                 .replace("%time%", String.valueOf(getRemainingCooldown(player)));
         player.sendMessage(ColorUtils.translateColorCodes(message));
     }
 
     private void displayCommands(Player player) {
         FileConfiguration config = Config.getConfig();
-        List<String> commands = config.getStringList("lobby.commandList");
+        List<String> commands = config.getStringList(ConfigCommandPath.LOBBY_COMMAND_LIST);
 
-        player.sendMessage(ColorUtils.translateColorCodes("&8&l≪ &6&lAvailable Commands &8&l≫"));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.LOBBY_HEADER)));
         player.sendMessage("");
 
         for (String command : commands) {
@@ -147,7 +145,7 @@ public class hub implements ICommandAPI, TabCompleter {
         }
 
         player.sendMessage("");
-        player.sendMessage(ColorUtils.translateColorCodes("&8&l≪ &6&lEnd of Commands &8&l≫"));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.LOBBY_FOOTER)));
     }
 
     private boolean isOnCooldown(Player player) {
@@ -192,7 +190,7 @@ public class hub implements ICommandAPI, TabCompleter {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("lobby.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.LOBBY_NO_PERMISSION)));
     }
 
     @Override
@@ -203,7 +201,7 @@ public class hub implements ICommandAPI, TabCompleter {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("lobby.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.LOBBY_PLAYER_ONLY)));
     }
 
     @Override
