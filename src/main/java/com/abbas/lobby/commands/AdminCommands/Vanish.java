@@ -1,6 +1,7 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Lobby;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
@@ -25,10 +26,10 @@ public class Vanish implements ICommandAPI {
         Config.setup();
         FileConfiguration config = Config.getConfig();
         if (!config.isConfigurationSection("vanishMessages")) {
-            config.set("vanishMessages.noPermission", "&c⚠ You do not have permission to use vanish!");
-            config.set("vanishMessages.enabled", "&a✔ You are now in vanish");
-            config.set("vanishMessages.disabled", "&c✖ You are no longer in vanish");
-            config.set("vanishMessages.playerOnly", "&c⚠ This command can only be used by players!");
+            config.set(ConfigCommandPath.VANISH_NO_PERMISSION, "&c⚠ You do not have permission to use vanish!");
+            config.set(ConfigCommandPath.VANISH_ENABLED, "&a✔ You are now in vanish");
+            config.set(ConfigCommandPath.VANISH_DISABLED, "&c✖ You are no longer in vanish");
+            config.set(ConfigCommandPath.VANISH_PLAYER_ONLY, "&c⚠ This command can only be used by players!");
             Config.save();
         }
     }
@@ -65,12 +66,12 @@ public class Vanish implements ICommandAPI {
             showPlayerToAll(player);
             plugin.vanish_list.remove(player);
             player.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("vanishMessages.disabled")));
+                    config.getString(ConfigCommandPath.VANISH_DISABLED)));
         } else {
             hidePlayerFromNonStaff(player);
             plugin.vanish_list.add(player);
             player.sendMessage(ColorUtils.translateColorCodes(
-                    config.getString("vanishMessages.enabled")));
+                    config.getString(ConfigCommandPath.VANISH_ENABLED)));
         }
         return true;
     }
@@ -112,7 +113,7 @@ public class Vanish implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("vanishMessages.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.VANISH_NO_PERMISSION)));
     }
 
     @Override
@@ -123,6 +124,6 @@ public class Vanish implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("vanishMessages.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.VANISH_PLAYER_ONLY)));
     }
 }
