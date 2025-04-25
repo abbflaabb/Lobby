@@ -1,10 +1,12 @@
 package com.abbas.lobby.commands.AdminCommands;
 
-import com.abbas.lobby.API.ICommandAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -22,13 +24,13 @@ public class SetSpawn implements ICommandAPI {
         Config.setup();
         FileConfiguration config = Config.getConfig();
         if (!config.isConfigurationSection("messages.setspawn")) {
-            config.set("messages.setspawn.success", "&a✔ Spawn location set successfully.");
-            config.set("messages.setspawn.noPermission", "&c⚠ You don't have permission to set spawn!");
-            config.set("messages.setspawn.playerOnly", "&c⚠ This command can only be used by players!");
-            config.set("messages.spawn.teleport", "&a✔ Teleported to spawn.");
-            config.set("messages.spawn.notSet", "&c⚠ Spawn location is not set.");
-            config.set("messages.respawn.teleport", "&a✔ Teleported to spawn.");
-            config.set("messages.respawn.notSet", "&c⚠ Spawn location is not set.");
+            config.set(ConfigPath.SETSPAWN_SUCCESS, "&a✔ Spawn location set successfully.");
+            config.set(ConfigPath.DROP_NO_PERMISSION, "&c⚠ You don't have permission to set spawn!");
+            config.set(ConfigPath.SPAWN_NOT_SET, "&c⚠ This command can only be used by players!");
+            config.set(ConfigPath.SPAWN_TELEPORT, "&a✔ Teleported to spawn.");
+            config.set(ConfigPath.SPAWN_NOT_SET, "&c⚠ Spawn location is not set.");
+            config.set(ConfigPath.RESPAWN_TELEPORT, "&a✔ Teleported to spawn.");
+            config.set(ConfigPath.RESPAWN_NOT_SET, "&c⚠ Spawn location is not set.");
             Config.save();
         }
     }
@@ -60,11 +62,11 @@ public class SetSpawn implements ICommandAPI {
 
     private boolean setSpawnLocation(Player player) {
         Location location = player.getLocation();
-        Config.getConfig().set("spawnLocation", location);
+        Config.getConfig().set(ConfigPath.SPAWN_LOCATION, location);
         Config.save();
 
         player.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("messages.setspawn.success")));
+                Config.getConfig().getString(ConfigPath.SETSPAWN_SUCCESS)));
         return true;
     }
 
@@ -91,7 +93,7 @@ public class SetSpawn implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("messages.setspawn.noPermission")));
+                Config.getConfig().getString(ConfigPath.DROP_NO_PERMISSION)));
     }
 
     @Override
@@ -102,6 +104,6 @@ public class SetSpawn implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("messages.setspawn.playerOnly")));
+                Config.getConfig().getString(ConfigPath.SPAWN_NOT_SET)));
     }
 }
