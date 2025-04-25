@@ -56,7 +56,6 @@ Required for optimal functionality:
 - **Vault** - For economy integration (if enabled)
 
 
-
 ##How To Use API
 ```java Example For Use IPlaceholders
 import com.abbas.lobby.API.IPlaceholders;
