@@ -1,6 +1,7 @@
 package com.abbas.lobby.TeleportBow;
 
-import com.abbas.lobby.API.ITeleportAPI;
+import com.abbas.lobby.API.ConfigAPI.ConfigPath;
+import com.abbas.lobby.API.MainAPIS.ITeleportAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.Material;
@@ -22,13 +23,13 @@ public class TeleportBow implements ITeleportAPI {
         FileConfiguration config = Config.getConfig();
 
         if (!config.contains("teleport-bow")) {
-            config.set("teleport-bow.name", "&b&lTeleport Bow");
-            config.set("teleport-bow.lore", new String[]{
+            config.set(ConfigPath.TELEPORT_BOW_NAME, "&b&lTeleport Bow");
+            config.set(ConfigPath.TELEPORT_BOW_LORE, new String[]{
                     "&7Right click to teleport to",
                     "&7the location you are looking at."
             });
-            config.set("teleport-bow.arrow-speed", 2.0);
-            config.set("teleport-bow.enabled", true);
+            config.set(ConfigPath.TELEPORT_BOW_ARROW_SPEED, 2.0);
+            config.set(ConfigPath.TELEPORT_BOW_ENABLED, true);
             Config.save();
         }
     }
@@ -36,8 +37,8 @@ public class TeleportBow implements ITeleportAPI {
     @Override
     public ItemStack createTeleportBow() {
         FileConfiguration config = Config.getConfig();
-        String name = config.getString("teleport-bow.name", "&b&lTeleport Bow");
-        List<String> lore = config.getStringList("teleport-bow.lore");
+        String name = config.getString(ConfigPath.TELEPORT_BOW_NAME, "&b&lTeleport Bow");
+        List<String> lore = config.getStringList(ConfigPath.TELEPORT_BOW_LORE);
 
         ItemStack bow = new ItemStack(Material.BOW);
         ItemMeta meta = bow.getItemMeta();
@@ -62,12 +63,12 @@ public class TeleportBow implements ITeleportAPI {
 
     @Override
     public double getArrowSpeed() {
-        return Math.min(Config.getConfig().getDouble("teleport-bow.arrow-speed", 2.0), 4.0);
+        return Math.min(Config.getConfig().getDouble(ConfigPath.TELEPORT_BOW_ARROW_SPEED, 2.0), 4.0);
     }
 
     @Override
     public boolean isEnabled() {
-        return Config.getConfig().getBoolean("teleport-bow.enabled", true);
+        return Config.getConfig().getBoolean(ConfigPath.TELEPORT_BOW_ENABLED, true);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class TeleportBow implements ITeleportAPI {
             return false;
         }
         String configName = ColorUtils.translateColorCodes(
-                Config.getConfig().getString("teleport-bow.name", "&b&lTeleport Bow")
+                Config.getConfig().getString(ConfigPath.TELEPORT_BOW_NAME, "&b&lTeleport Bow")
         );
         return item.getItemMeta().getDisplayName().equals(configName);
     }
