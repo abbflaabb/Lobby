@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,14 +24,14 @@ public class FlyCommand implements ICommandAPI {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("fly")) {
-            config.set("fly.noPermission", "&cYou don't have permission to use this command!");
-            config.set("fly.playerOnly", "&cOnly players can use this command!");
-            config.set("fly.enabled", "&aFly mode enabled!");
-            config.set("fly.disabled", "&cFly mode disabled!");
-            config.set("fly.highEnabled", "&aHigh-Speed Fly mode enabled!");
-            config.set("fly.highDisabled", "&cHigh-Speed Fly mode disabled!");
-            config.set("fly.normalSpeed", 0.1);
-            config.set("fly.highSpeed", 0.5);
+            config.set(ConfigCommandPath.FLY_NO_PERMISSION, "&cYou don't have permission to use this command!");
+            config.set(ConfigCommandPath.FLY_PLAYER_ONLY, "&cOnly players can use this command!");
+            config.set(ConfigCommandPath.FLY_ENABLED, "&aFly mode enabled!");
+            config.set(ConfigCommandPath.FLY_DISABLED, "&cFly mode disabled!");
+            config.set(ConfigCommandPath.FLY_HIGH_ENABLED, "&aHigh-Speed Fly mode enabled!");
+            config.set(ConfigCommandPath.FLY_HIGH_DISABLED, "&cHigh-Speed Fly mode disabled!");
+            config.set(ConfigCommandPath.FLY_NORMAL_SPEED, 0.1);
+            config.set(ConfigCommandPath.FLY_HIGH_SPEED, 0.5);
             Config.save();
         }
     }
@@ -70,13 +71,13 @@ public class FlyCommand implements ICommandAPI {
         player.setAllowFlight(!isFlying);
         player.setFlying(!isFlying);
 
-        float normalSpeed = (float) config.getDouble("fly.normalSpeed", 0.1);
-        float highSpeed = (float) config.getDouble("fly.highSpeed", 0.5);
+        float normalSpeed = (float) config.getDouble(ConfigCommandPath.FLY_NORMAL_SPEED, 0.1);
+        float highSpeed = (float) config.getDouble(ConfigCommandPath.FLY_HIGH_SPEED, 0.5);
         player.setFlySpeed(!isFlying ? (highMode ? highSpeed : normalSpeed) : 0.1f);
 
         String messageKey = isFlying
-                ? (highMode ? "fly.highDisabled" : "fly.disabled")
-                : (highMode ? "fly.highEnabled" : "fly.enabled");
+                ? (highMode ? ConfigCommandPath.FLY_HIGH_DISABLED : ConfigCommandPath.FLY_DISABLED)
+                : (highMode ? ConfigCommandPath.FLY_HIGH_ENABLED : ConfigCommandPath.FLY_ENABLED);
 
         player.sendMessage(ColorUtils.translateColorCodes(config.getString(messageKey)));
     }
@@ -104,7 +105,7 @@ public class FlyCommand implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("fly.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.FLY_NO_PERMISSION)));
     }
 
     @Override
@@ -115,6 +116,6 @@ public class FlyCommand implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("fly.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.FLY_PLAYER_ONLY)));
     }
 }
