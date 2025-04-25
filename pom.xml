@@ -51,10 +51,6 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -102,11 +98,6 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.abbflaabb</groupId>
-            <artifactId>com.abbas.lobby</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
