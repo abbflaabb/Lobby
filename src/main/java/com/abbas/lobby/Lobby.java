@@ -226,6 +226,4 @@ public final class Lobby extends JavaPlugin {
     public static Lobby getInstance() {
         return instance;
     }
-
-
 }
