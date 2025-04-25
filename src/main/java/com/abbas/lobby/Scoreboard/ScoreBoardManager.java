@@ -1,9 +1,10 @@
 package com.abbas.lobby.Scoreboard;
 
-import com.abbas.lobby.API.ILuckPerms;
+import com.abbas.lobby.API.ConfigAPI.ConfigPath;
+import com.abbas.lobby.API.MainAPIS.ILuckPerms;
+import com.abbas.lobby.API.MainAPIS.IScoreboard;
 import com.abbas.lobby.Lobby;
 import com.abbas.lobby.Placeholders.Placeholders;
-import com.abbas.lobby.API.IScoreboard;
 import com.abbas.lobby.Utils.ColorUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -37,7 +38,7 @@ public class ScoreBoardManager implements IScoreboard {
         Objective obj = board.registerNewObjective("lobby", "dummy");
 
         String title = PlaceholderAPI.setPlaceholders(player,
-                ScoreBoardConfig.getConfig().getString("scoreboard.title"));
+                ScoreBoardConfig.getConfig().getString(ConfigPath.SCOREBOARD_TITLE));
         obj.setDisplayName(ColorUtils.translateColorCodes(truncate(title)));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -45,7 +46,7 @@ public class ScoreBoardManager implements IScoreboard {
     }
 
     private void setScoreboardLines(Player player, Scoreboard board, Objective obj) {
-        String[] lines = ScoreBoardConfig.getConfig().getStringList("scoreboard.lines").toArray(new String[0]);
+        String[] lines = ScoreBoardConfig.getConfig().getStringList(ConfigPath.SCOREBOARD_LINES).toArray(new String[0]);
         int score = lines.length;
 
         for (String line : lines) {
