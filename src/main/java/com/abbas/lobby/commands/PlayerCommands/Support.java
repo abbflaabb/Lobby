@@ -1,8 +1,9 @@
 package com.abbas.lobby.commands.PlayerCommands;
 
+import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
+import com.abbas.lobby.API.MainAPIS.ICommandAPI;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
-import com.abbas.lobby.API.ICommandAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,12 +23,12 @@ public class Support implements ICommandAPI {
         FileConfiguration config = Config.getConfig();
 
         if (!config.isConfigurationSection("support")) {
-            config.set("support.noPermission", "&c⚠ You do not have permission to use this command!");
-            config.set("support.playerOnly", "&c⚠ Console cannot use this command!");
-            config.set("support.title", "&6&lMainCommands Support");
-            config.set("support.discord", "&6&l/discord - Join Discord Server");
-            config.set("support.teamspeak", "&6&l/teamspeak - Join Teamspeak Server - &cBeta and Coming Soon");
-            config.set("support.forums", "&6&l/forums - Visit our Forums - &cBeta and Coming Soon");
+            config.set(ConfigCommandPath.SUPPORT_NO_PERMISSION, "&c⚠ You do not have permission to use this command!");
+            config.set(ConfigCommandPath.SUPPORT_PLAYER_ONLY, "&c⚠ Console cannot use this command!");
+            config.set(ConfigCommandPath.SUPPORT_TITLE, "&6&lMainCommands Support");
+            config.set(ConfigCommandPath.SUPPORT_DISCORD, "&6&l/discord - Join Discord Server");
+            config.set(ConfigCommandPath.SUPPORT_TEAMSPEAK, "&6&l/teamspeak - Join Teamspeak Server - &cBeta and Coming Soon");
+            config.set(ConfigCommandPath.SUPPORT_FORUMS, "&6&l/forums - Visit our Forums - &cBeta and Coming Soon");
             Config.save();
         }
     }
@@ -54,10 +55,10 @@ public class Support implements ICommandAPI {
 
     private void displaySupportInfo(Player player) {
         FileConfiguration config = Config.getConfig();
-        player.sendMessage(ColorUtils.translateColorCodes(config.getString("support.title")));
-        player.sendMessage(ColorUtils.translateColorCodes(config.getString("support.discord")));
-        player.sendMessage(ColorUtils.translateColorCodes(config.getString("support.teamspeak")));
-        player.sendMessage(ColorUtils.translateColorCodes(config.getString("support.forums")));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.SUPPORT_TITLE)));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.SUPPORT_DISCORD)));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.SUPPORT_TEAMSPEAK)));
+        player.sendMessage(ColorUtils.translateColorCodes(config.getString(ConfigCommandPath.SUPPORT_FORUMS)));
     }
 
     @Override
@@ -83,9 +84,8 @@ public class Support implements ICommandAPI {
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("support.noPermission")));
+                Config.getConfig().getString(ConfigCommandPath.SUPPORT_NO_PERMISSION)));
     }
-
     @Override
     public boolean isPlayerOnly() {
         return true;
@@ -94,6 +94,6 @@ public class Support implements ICommandAPI {
     @Override
     public void sendPlayerOnlyMessage(CommandSender sender) {
         sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString("support.playerOnly")));
+                Config.getConfig().getString(ConfigCommandPath.SUPPORT_PLAYER_ONLY)));
     }
 }
