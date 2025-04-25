@@ -58,7 +58,7 @@ Required for optimal functionality:
 
 
 ##How To Use API
-``` import com.abbas.lobby.API.IPlaceholders;
+</ import com.abbas.lobby.API.IPlaceholders;
 import org.bukkit.entity.Player;
 
 public class CustomPlaceholder {
@@ -84,7 +84,7 @@ public class CustomPlaceholder {
         return placeholderManager.replacePlaceholders(text, player);
     }
 }
-```
+>
 ## License
 This plugin is protected under copyright law. All rights reserved.
 
