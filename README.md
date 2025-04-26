@@ -6,7 +6,7 @@ This is a custom Lobby plugin designed to enhance the server experience with ess
 ## Progress
 <div align="center">
 
-![Java](https://img.shields.io/badge/Java-35%25-orange?style=for-the-badge&logo=java&logoColor=white)
+![Java](https://img.shields.io/badge/Java-85%25-orange?style=for-the-badge&logo=java&logoColor=white)
 ![Last Updated](https://img.shields.io/badge/Last%20Updated-2025--03--27-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge)
 
