@@ -3,6 +3,7 @@ package com.abbas.lobby;
 import com.abbas.lobby.API.EventsAPI.*;
 import com.abbas.lobby.API.MainAPIS.*;
 import com.abbas.lobby.Placeholders.Placeholders;
+import com.abbas.lobby.PlayerVisibility.PlayerVisibility;
 import com.abbas.lobby.Scoreboard.*;
 import com.abbas.lobby.TeleportBow.TeleportBow;
 import com.abbas.lobby.Listeners.*;
@@ -40,19 +41,21 @@ public final class Lobby extends JavaPlugin {
     private MuteChatAPI muteChatAPI;
     private BlockBreakAPI blockBreakAPI;
     private RespawnAPI respawnAPI;
+    private static IVisibilityAPI visibilityAPI;
+
 
     @Override
     public void onEnable() {
         logger.info("╔════════════════════════════════════╗");
         logger.info("║        Lobby Plugin v" + getDescription().getVersion() + "║");
         logger.info("║------------------------------------║");
-
         initializeServices();
         registerAPIServices();
         registerCommands();
         registerListeners();
         setupConfigs();
         logStartupInfo();
+
     }
 
     private void initializeServices() {
@@ -64,7 +67,9 @@ public final class Lobby extends JavaPlugin {
         this.luckPerms = new LuckPermsRank();
         this.luckPerms.setup();
         this.scoreboard = new ScoreBoardManager(this);
+        this.subTitle = new SubTitleListener(new SubTitle(), this);
         registerAPIs();
+        visibilityAPI = new VisibilityAPI();
 
     }
 
@@ -98,6 +103,7 @@ public final class Lobby extends JavaPlugin {
         getCommand("lobby").setExecutor(lobbyCommand);
         getCommand("lobby").setTabCompleter(lobbyCommand);
         getCommand("Discord").setExecutor(new Discord());
+
     }
 
     private void registerAPICommand(ICommandAPI command) {
@@ -115,14 +121,14 @@ public final class Lobby extends JavaPlugin {
         muteChatAPI = new MuteChatListener();
         blockBreakAPI = new PlayerBlockBreakEvent();
         respawnAPI = new ReSpawnListener();
-
+        teleportAPI = new TeleportBowListener(this);
     }
     private void registerListeners() {
         PluginManager pm = Bukkit.getPluginManager();
 
         pm.registerEvents(new ScoreBoardListener(this), this);
-        pm.registerEvents(new SubTitleListener(this.subTitle, this), this);
-        pm.registerEvents(new TeleportBowListener(this), this);
+        pm.registerEvents((TeleportBowListener) teleportAPI, this);
+        pm.registerEvents((SubTitleListener) this.subTitle, this);
         pm.registerEvents((BanListener) banListenerAPI, this);
         pm.registerEvents((BlockPlace) blockPlaceAPI, this);
         pm.registerEvents((DropEvent) dropAPI, this);
@@ -131,7 +137,7 @@ public final class Lobby extends JavaPlugin {
         pm.registerEvents((MuteChatListener) muteChatAPI, this);
         pm.registerEvents((PlayerBlockBreakEvent) blockBreakAPI, this);
         pm.registerEvents((ReSpawnListener) respawnAPI, this);
-
+        getServer().getPluginManager().registerEvents(new PlayerVisibility(this), this);
     }
 
     private void setupConfigs() {
@@ -201,6 +207,10 @@ public final class Lobby extends JavaPlugin {
         return banListenerAPI;
     }
 
+    public BlockBreakAPI getBlockBreakAPI() {
+        return blockBreakAPI;
+    }
+
     public BlockPlaceAPI getBlockPlaceAPI() {
         return blockPlaceAPI;
     }
@@ -211,9 +221,6 @@ public final class Lobby extends JavaPlugin {
     public HungerAPI getHungerAPI() {
         return hungerAPI;
     }
-    public ICommandAPI getCommandAPI() {
-        return commandAPI;
-    }
     public JoinListenerAPI getJoinListenerAPI() {
         return joinListenerAPI;
     }
@@ -223,6 +230,14 @@ public final class Lobby extends JavaPlugin {
     public RespawnAPI getRespawnAPI() {
         return respawnAPI;
     }
+    public ICommandAPI getCommandAPI() {
+        return commandAPI;
+    }
+
+    public static IVisibilityAPI getVisibilityAPI() {
+        return visibilityAPI;
+    }
+
     public static Lobby getInstance() {
         return instance;
     }
