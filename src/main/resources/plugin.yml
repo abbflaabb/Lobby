@@ -47,6 +47,9 @@ commands:
     usage: /<command>
   sb:
     usage: /<command>
+  togglevisibility:
+    usage: /<command>
+    aliases: [togglevis]
 
 permissions:
   # Admin Permissions
@@ -108,7 +111,9 @@ permissions:
   lobby.discord:
     description: Allows using discord command
     default: true
-
+  lobby.visibility.toggle:
+    description: Allows toggling visibility
+    default: true
   # Event Permissions
   lobby.BlockPlace:
     description: Allows placing blocks
