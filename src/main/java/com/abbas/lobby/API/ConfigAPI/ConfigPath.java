@@ -42,5 +42,11 @@ public class ConfigPath {
     public static final String SCOREBOARD_LINES = "scoreboard.lines";
     public static final String SCOREBOARD_UPDATE_INTERVAL = "scoreboard.update-interval";
 
+    // Visibility Paths
+    public static final String VISIBILITY_ENABLED = "visibility.enabled";
+
+    public static final String VISIBILITY_MESSAGES_SHOWN = "visibility.messages.shown";
+    public static final String VISIBILITY_MESSAGES_HIDDEN = "visibility.messages.hidden";
+    public static final String VISIBILITY_MESSAGES_COOLDOWN = "visibility.messages.cooldown";
 
 }
