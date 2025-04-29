@@ -136,5 +136,3 @@ public class ConfigCommandPath {
     public static final String WARN_SUCCESS = "warnMessages.warn.success";
     public static final String WARN_STAFF_NOTIFICATION = "warnMessages.warn.staffNotification";
 }
-
-
