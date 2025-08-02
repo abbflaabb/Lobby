@@ -54,7 +54,8 @@ public class PlayerVisibility implements Listener {
         if (!config.isSet("Item.slot")) config.set("Item.slot", 4);
         if (!config.isSet("Messages.hidden")) config.set("Messages.hidden", "&cPlayers are now hidden!");
         if (!config.isSet("Messages.shown")) config.set("Messages.shown", "&aPlayers are now visible!");
-        if (!config.isSet("Messages.cooldown")) config.set("Messages.cooldown", "&cPlease wait {time} seconds before toggling visibility!");
+        if (!config.isSet("Messages.cooldown"))
+            config.set("Messages.cooldown", "&cPlease wait {time} seconds before toggling visibility!");
         if (!config.isSet("Item.nameHidden")) config.set("Item.nameHidden", "&cPlayers Hidden");
         if (!config.isSet("Item.nameVisible")) config.set("Item.nameVisible", "&aPlayers Visible");
         VisibilityConfig.save();
@@ -158,17 +159,37 @@ public class PlayerVisibility implements Listener {
     }
 
     private void sendMessage(Player player, String path, String defaultMsg, long timeLeft) {
+        if (player == null) return;
+
         String msg = VisibilityConfig.getConfig().getString("Messages." + path, defaultMsg);
-        if (msg != null) {
-            msg = msg.replace("{time}", String.valueOf(timeLeft));
-            player.sendMessage(ColorUtils.translateColorCodes(msg));
+        if (msg != null && msg.trim().length() > 0) {
+            try {
+                if (plugin.getPlaceholders() != null) {
+                    plugin.getPlaceholders().setCooldownTime(timeLeft);
+                    msg = plugin.getPlaceholders().replacePlaceholders(msg, player);
+                } else {
+                    msg = msg.replace("{time}", String.valueOf(timeLeft));
+                }
+                player.sendMessage(ColorUtils.translateColorCodes(msg));
+            } catch (Exception e) {
+                player.sendMessage(ColorUtils.translateColorCodes(defaultMsg.replace("{time}", String.valueOf(timeLeft))));
+            }
         }
     }
 
     private void sendMessage(Player player, String path, String defaultMsg) {
+        if (player == null) return;
+
         String msg = VisibilityConfig.getConfig().getString("Messages." + path, defaultMsg);
-        if (msg != null) {
-            player.sendMessage(ColorUtils.translateColorCodes(msg));
+        if (msg != null && msg.trim().length() > 0) {
+            try {
+                if (plugin.getPlaceholders() != null) {
+                    msg = plugin.getPlaceholders().replacePlaceholders(msg, player);
+                }
+                player.sendMessage(ColorUtils.translateColorCodes(msg));
+            } catch (Exception e) {
+                player.sendMessage(ColorUtils.translateColorCodes(defaultMsg));
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.abbas.lobby.commands.PlayerCommands;
 
 import com.abbas.lobby.API.ConfigAPI.ConfigCommandPath;
 import com.abbas.lobby.API.MainAPIS.ICommandAPI;
+import com.abbas.lobby.Lobby;
 import com.abbas.lobby.Utils.ColorUtils;
 import com.abbas.lobby.Utils.Config;
 import org.bukkit.command.Command;
@@ -15,14 +16,16 @@ import java.util.*;
 public class hub implements ICommandAPI, TabCompleter {
     private static final String COMMAND_NAME = "lobby";
     private static final String PERMISSION_NODE = "lobby.lobby";
-    private static final int COOLDOWN_SECONDS = 10;
+    private static final int COOLDOWN_SECONDS = 6;
+    private final Lobby plugin;
 
     private Map<String, List<String>> commandCategories;
-    private Set<UUID> cooldowns;
+    private final Map<UUID, Long> cooldowns;
 
-    public hub() {
+    public hub(Lobby plugin) {
+        this.plugin = plugin;
         this.commandCategories = new HashMap<>();
-        this.cooldowns = new HashSet<>();
+        this.cooldowns = new HashMap<>();
         setupConfig();
         initializeCommandCategories();
     }
@@ -41,13 +44,12 @@ public class hub implements ICommandAPI, TabCompleter {
         if (!config.isConfigurationSection("lobby")) {
             config.set(ConfigCommandPath.LOBBY_NO_PERMISSION, "&c⚠ You do not have permission to use this command!");
             config.set(ConfigCommandPath.LOBBY_PLAYER_ONLY, "&c⚠ Console cannot use this command!");
-            config.set(ConfigCommandPath.LOBBY_COOLDOWN, "&c⚠ Please wait %time% seconds before using this command again!");
+            config.set(ConfigCommandPath.LOBBY_COOLDOWN, "&c⚠ Please wait %cooldown_Time% seconds before using this command again!");
             config.set(ConfigCommandPath.LOBBY_HEADER, "&8&l≪ &6&lLobby Commands &8&l≫");
             config.set(ConfigCommandPath.LOBBY_FOOTER, "&8&l≪ &6&lEnd of Commands &8&l≫");
             config.set(ConfigCommandPath.LOBBY_GENERAL_COMMANDS, "&a&lGeneral Commands:");
             config.set(ConfigCommandPath.LOBBY_PREMIUM_COMMANDS, "&b&lPremium Commands:");
             config.set(ConfigCommandPath.LOBBY_ADMIN_COMMANDS, "&c&lAdmin Commands:");
-
             setupCommandList(config);
             Config.save();
         }
@@ -81,17 +83,12 @@ public class hub implements ICommandAPI, TabCompleter {
 
         List<String> formattedCommands = new ArrayList<>();
         formattedCommands.add("&6&lGeneral Commands:");
-        generalCommands.forEach((cmd, desc) ->
-                formattedCommands.add("&7➤ &e/" + cmd + " &8- &7" + desc));
-
+        generalCommands.forEach((cmd, desc) -> formattedCommands.add("&7➤ &e/" + cmd + " &8- &7" + desc));
         formattedCommands.add("");
         formattedCommands.add("&b&lPremium Commands:");
-        premiumCommands.forEach((cmd, desc) ->
-                formattedCommands.add("&7➤ &b/" + cmd + " &8- &7" + desc));
-
+        premiumCommands.forEach((cmd, desc) -> formattedCommands.add("&7➤ &b/" + cmd + " &8- &7" + desc));
         formattedCommands.add("");
-        adminCommands.forEach((cmd, desc) ->
-                formattedCommands.add("&7➤ &c/" + cmd + " &8- &7" + desc));
+        adminCommands.forEach((cmd, desc) -> formattedCommands.add("&7➤ &c/" + cmd + " &8- &7" + desc));
 
         config.set(ConfigCommandPath.LOBBY_COMMAND_LIST, formattedCommands);
         Config.save();
@@ -127,8 +124,13 @@ public class hub implements ICommandAPI, TabCompleter {
     }
 
     private void sendCooldownMessage(Player player) {
-        String message = Config.getConfig().getString(ConfigCommandPath.LOBBY_COOLDOWN)
-                .replace("%time%", String.valueOf(getRemainingCooldown(player)));
+        String message = Config.getConfig().getString(ConfigCommandPath.LOBBY_COOLDOWN, "&c⚠ Please wait %cooldown_Time% seconds before using this command again!");
+        if (plugin.getPlaceholders() != null) {
+            plugin.getPlaceholders().setCooldownTime(getRemainingCooldown(player));
+            message = plugin.getPlaceholders().replacePlaceholders(message, player);
+        } else {
+            message = message.replace("%cooldown_Time%", String.valueOf(getRemainingCooldown(player)));
+        }
         player.sendMessage(ColorUtils.translateColorCodes(message));
     }
 
@@ -149,22 +151,20 @@ public class hub implements ICommandAPI, TabCompleter {
     }
 
     private boolean isOnCooldown(Player player) {
-        return cooldowns.contains(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        return cooldowns.containsKey(uuid) && cooldowns.get(uuid) > System.currentTimeMillis();
     }
 
     private void setCooldown(Player player) {
-        UUID playerId = player.getUniqueId();
-        cooldowns.add(playerId);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                cooldowns.remove(playerId);
-            }
-        }, COOLDOWN_SECONDS * 1000L);
+        UUID uuid = player.getUniqueId();
+        cooldowns.put(uuid, System.currentTimeMillis() + (COOLDOWN_SECONDS * 1000L));
     }
 
     private int getRemainingCooldown(Player player) {
-        return COOLDOWN_SECONDS;
+        UUID uuid = player.getUniqueId();
+        long cooldownEnd = cooldowns.getOrDefault(uuid, 0L);
+        long remaining = (cooldownEnd - System.currentTimeMillis()) / 1000;
+        return (int) Math.max(0, remaining);
     }
 
     @Override

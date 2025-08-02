@@ -36,4 +36,3 @@ public class VisibilityConfig {
         Config = YamlConfiguration.loadConfiguration(file);
     }
 }
-// Compare this snippet from src/main/java/com/abbas/lobby/PlayerVisibility/VisibilityAPI.java:

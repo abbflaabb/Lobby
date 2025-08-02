@@ -14,10 +14,10 @@ public class MuteConfig {
             config.set("muteMessages.exempt", "&c⚠ This player cannot be muted!");
             config.set("muteMessages.alreadyMuted", "&c⚠ This player is already muted!");
             config.set("muteMessages.invalidDuration", "&c⚠ Invalid duration format! Use s/m/h/d");
-            config.set("muteMessages.playerMuted", "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-            config.set("muteMessages.playerMutedPermanent", "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-            config.set("muteMessages.success", "&a✔ Successfully muted %player% for %duration% (ID: %mute_id%)");
-            config.set("muteMessages.successPermanent", "&a✔ Successfully muted %player% permanently (ID: %mute_id%)");
+            config.set("muteMessages.playerMuted", "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%");
+            config.set("muteMessages.playerMutedPermanent", "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%");
+            config.set("muteMessages.success", "&a✔ Successfully muted %player% for %duration%");
+            config.set("muteMessages.successPermanent", "&a✔ Successfully muted %player% permanently");
 
 
             config.set("muteMessages.cannotChat", "&cYou cannot chat while muted! Time remaining: &e%timeLeft%");
@@ -32,7 +32,7 @@ public class MuteConfig {
             config.set("muteMessages.unmute.target", "&a✔ You have been unmuted!");
             config.set("muteMessages.staff.unmuteNotification", "&7[Staff] &e%player% &7was unmuted by &e%unmuter%");
 
-            config.set("muteMessages.staff.notification", "&7[Staff] &e%player% &7was muted by &e%muter% &7for: &e%reason%. Mute ID: &e%mute_id%");
+            config.set("muteMessages.staff.notification", "&7[Staff] &e%player% &7was muted by &e%muter% &7for: &e%reason%.");
 
             Config.save();
         }

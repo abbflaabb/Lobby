@@ -26,6 +26,7 @@ public class ScoreBoardConfig {
                     "&fRank: &a%Lobby_rank%",
                     "&fBalance: &6%vault_eco_balance_formatted%",
                     "",
+                    "&fDate: &e%Date_time%",
                     "&e%ip_server%",
                     "&8&m------------------------"
             });

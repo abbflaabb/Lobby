@@ -13,7 +13,7 @@ public class ConfigPath {
     public static final String RESPAWN_TELEPORT = "messages.respawn.teleport";
     public static final String RESPAWN_NOT_SET = "messages.respawn.notSet";
     public static final String SPAWN_LOCATION = "spawnLocation";
-
+    public static final String SET_SPAWN_NO_PERMISSION = "messages.setspawn.noPermission";
 
     public static final String JOIN_PREFIX = "join.prefix";
     public static final String JOIN_MESSAGE_WELCOME = "join.messages.welcome";
@@ -42,11 +42,23 @@ public class ConfigPath {
     public static final String SCOREBOARD_LINES = "scoreboard.lines";
     public static final String SCOREBOARD_UPDATE_INTERVAL = "scoreboard.update-interval";
 
-    // Visibility Paths
-    public static final String VISIBILITY_ENABLED = "visibility.enabled";
+    // DonatorChat
+    public static final String DONATOR_CHAT_ENABLED = "donatorchat.enabled";
+    public static final String DONATOR_CHAT_FORMAT = "donatorchat.format";
+    public static final String DONATOR_CHAT_COOLDOWN = "donatorchat.cooldown";
 
-    public static final String VISIBILITY_MESSAGES_SHOWN = "visibility.messages.shown";
-    public static final String VISIBILITY_MESSAGES_HIDDEN = "visibility.messages.hidden";
-    public static final String VISIBILITY_MESSAGES_COOLDOWN = "visibility.messages.cooldown";
+    public static final String CHAT_FORMAT = "chat.format";
+    public static final String CHAT_ENABLED = "chat.enabled";
+    public static final String CHAT_COOLDOWN = "chat.cooldown";
+    public static final String CHAT_NO_PERMISSION = "chat.messages.no-permission";
+    public static final String CHAT_COOLDOWN_MESSAGE = "chat.messages.cooldown";
 
+    // Chat ranks paths
+    public static final String CHAT_RANKS_OWNER = "chat.ranks.owner";
+    public static final String CHAT_RANKS_ADMIN = "chat.ranks.admin";
+    public static final String CHAT_RANKS_MOD = "chat.ranks.mod";
+    public static final String CHAT_RANKS_VIP = "chat.ranks.vip";
+    public static final String CHAT_RANKS_DEFAULT = "chat.ranks.default";
+    public static final String CHAT_RANKS_PREMIUM = "chat.ranks.premium";
+    public static final String CHAT_RANKS_MEMBER = "chat.ranks.member";
 }

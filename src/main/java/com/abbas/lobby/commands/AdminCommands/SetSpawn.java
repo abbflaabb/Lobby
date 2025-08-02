@@ -25,7 +25,7 @@ public class SetSpawn implements ICommandAPI {
         FileConfiguration config = Config.getConfig();
         if (!config.isConfigurationSection("messages.setspawn")) {
             config.set(ConfigPath.SETSPAWN_SUCCESS, "&a✔ Spawn location set successfully.");
-            config.set(ConfigPath.DROP_NO_PERMISSION, "&c⚠ You don't have permission to set spawn!");
+            config.set(ConfigPath.SET_SPAWN_NO_PERMISSION, "&c⚠ You don't have permission to set spawn!");
             config.set(ConfigPath.SPAWN_NOT_SET, "&c⚠ This command can only be used by players!");
             config.set(ConfigPath.SPAWN_TELEPORT, "&a✔ Teleported to spawn.");
             config.set(ConfigPath.SPAWN_NOT_SET, "&c⚠ Spawn location is not set.");
@@ -92,10 +92,12 @@ public class SetSpawn implements ICommandAPI {
 
     @Override
     public void sendNoPermissionMessage(CommandSender sender) {
-        sender.sendMessage(ColorUtils.translateColorCodes(
-                Config.getConfig().getString(ConfigPath.DROP_NO_PERMISSION)));
+        String msg = Config.getConfig().getString(ConfigPath.SET_SPAWN_NO_PERMISSION);
+        if (msg == null) {
+            msg = "&c⚠ You don't have permission to set spawn!";
+        }
+        sender.sendMessage(ColorUtils.translateColorCodes(msg));
     }
-
     @Override
     public boolean isPlayerOnly() {
         return true;

@@ -2,6 +2,9 @@ package com.abbas.lobby;
 
 import com.abbas.lobby.API.EventsAPI.*;
 import com.abbas.lobby.API.MainAPIS.*;
+import com.abbas.lobby.ChatFormat.ChatFormat;
+import com.abbas.lobby.DonatorChat.DonatorChat;
+import com.abbas.lobby.DonatorChat.DonatorChatCommand;
 import com.abbas.lobby.Placeholders.Placeholders;
 import com.abbas.lobby.PlayerVisibility.PlayerVisibility;
 import com.abbas.lobby.Scoreboard.*;
@@ -42,6 +45,7 @@ public final class Lobby extends JavaPlugin {
     private BlockBreakAPI blockBreakAPI;
     private RespawnAPI respawnAPI;
     private static IVisibilityAPI visibilityAPI;
+    private DonatorChat donatorChat;
 
 
     @Override
@@ -70,6 +74,7 @@ public final class Lobby extends JavaPlugin {
         this.subTitle = new SubTitleListener(new SubTitle(), this);
         registerAPIs();
         visibilityAPI = new VisibilityAPI();
+        this.donatorChat = new DonatorChat(this);
 
     }
 
@@ -84,7 +89,7 @@ public final class Lobby extends JavaPlugin {
 
     private void registerCommands() {
         registerAPICommand(new FlyCommand());
-        registerAPICommand(new hub());
+        registerAPICommand(new hub(this));
         registerAPICommand(new InformationCommand());
         registerAPICommand(new Ping());
         registerAPICommand(new Spawn());
@@ -99,11 +104,12 @@ public final class Lobby extends JavaPlugin {
         registerAPICommand(new WarnCommand());
         registerAPICommand(new UnmuteCommand());
         registerAPICommand(new ScoreBoardCommand(this.scoreboard));
-        hub lobbyCommand = new hub();
+        hub lobbyCommand = new hub(this);
         getCommand("lobby").setExecutor(lobbyCommand);
         getCommand("lobby").setTabCompleter(lobbyCommand);
         getCommand("Discord").setExecutor(new Discord());
-
+        getCommand("dchat").setExecutor(new DonatorChatCommand(donatorChat));
+        getCommand("mutelist").setExecutor(new MuteListCommand());
     }
 
     private void registerAPICommand(ICommandAPI command) {
@@ -122,6 +128,7 @@ public final class Lobby extends JavaPlugin {
         blockBreakAPI = new PlayerBlockBreakEvent();
         respawnAPI = new ReSpawnListener();
         teleportAPI = new TeleportBowListener(this);
+
     }
     private void registerListeners() {
         PluginManager pm = Bukkit.getPluginManager();
@@ -137,6 +144,9 @@ public final class Lobby extends JavaPlugin {
         pm.registerEvents((MuteChatListener) muteChatAPI, this);
         pm.registerEvents((PlayerBlockBreakEvent) blockBreakAPI, this);
         pm.registerEvents((ReSpawnListener) respawnAPI, this);
+        pm.registerEvents(new DonatorChat(this), this);
+        pm.registerEvents(new MuteListGUI(),this);
+        pm.registerEvents(new ChatFormat(this), this);
         getServer().getPluginManager().registerEvents(new PlayerVisibility(this), this);
     }
 

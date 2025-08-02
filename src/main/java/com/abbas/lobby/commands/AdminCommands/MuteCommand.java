@@ -19,10 +19,8 @@ import java.util.regex.Pattern;
 public class MuteCommand implements ICommandAPI {
    private static final String COMMAND_NAME = "mute";
    private static final String PERMISSION_MUTE = "lobby.mute";
-   private static final String PERMISSION_EXEMPT = "lobby.mute.exempt";
    private static final Map<UUID, Long> mutedPlayers = new HashMap<>();
    private static final Map<UUID, String> muteReasons = new HashMap<>();
-   private static final Map<String, String> muteIds = new HashMap<>();
 
 
    public MuteCommand() {
@@ -42,12 +40,12 @@ public class MuteCommand implements ICommandAPI {
          config.set(ConfigCommandPath.MUTE_EXEMPT, "&c⚠ This player cannot be muted!");
          config.set(ConfigCommandPath.MUTE_ALREADY_MUTED, "&c⚠ This player is already muted!");
          config.set(ConfigCommandPath.MUTE_INVALID_DURATION, "&c⚠ Invalid duration format! Use s/m/h/d");
-         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED, "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED_PERMANENT, "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%\n&7Mute ID: &f%mute_id%");
-         config.set(ConfigCommandPath.MUTE_SUCCESS, "&a✔ Successfully muted %player% for %duration% (ID: %mute_id%)");
-         config.set(ConfigCommandPath.MUTE_SUCCESS_PERMANENT, "&a✔ Successfully muted %player% permanently (ID: %mute_id%)");
+         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED, "&c⚠ You have been muted for %duration%\n&7Reason: &f%reason%");
+         config.set(ConfigCommandPath.MUTE_PLAYER_MUTED_PERMANENT, "&c⚠ You have been permanently muted!\n&7Reason: &f%reason%");
+         config.set(ConfigCommandPath.MUTE_SUCCESS, "&a✔ Successfully muted %player% for %duration%");
+         config.set(ConfigCommandPath.MUTE_SUCCESS_PERMANENT, "&a✔ Successfully muted %player% permanently");
          config.set(ConfigCommandPath.MUTE_STAFF_NOTIFICATION,
-                 "&7[Staff] &e%player% &7was muted by &e%muter% &7for: &e%reason%. Mute ID: &e%mute_id%");
+                 "&7[Staff] &e%player% &7was muted by &e%muter% &7for: &e%reason%.");
          Config.save();
       }
 
@@ -74,8 +72,6 @@ public class MuteCommand implements ICommandAPI {
 
       return processMute(sender, args);
    }
-
-
    private boolean processMute(CommandSender sender, String[] args) {
       FileConfiguration config = Config.getConfig();
       String playerName = args[0];
@@ -87,15 +83,14 @@ public class MuteCommand implements ICommandAPI {
          return true;
       }
 
-      if (target.hasPermission(PERMISSION_EXEMPT)) {
-         sender.sendMessage(ColorUtils.translateColorCodes(
-                 config.getString(ConfigCommandPath.MUTE_EXEMPT)));
-         return true;
-      }
-
       if (mutedPlayers.containsKey(target.getUniqueId())) {
          sender.sendMessage(ColorUtils.translateColorCodes(
                  config.getString(ConfigCommandPath.MUTE_ALREADY_MUTED)));
+         return true;
+      }
+      if (target.isOp()) {
+         sender.sendMessage(ColorUtils.translateColorCodes(
+                 config.getString(ConfigCommandPath.MUTE_EXEMPT)));
          return true;
       }
 
@@ -130,7 +125,6 @@ public class MuteCommand implements ICommandAPI {
 
    private void applyMute(CommandSender sender, Player target, Long duration, String reason) {
       String muteId = generateMuteId();
-      muteIds.put(target.getName().toLowerCase(), muteId);
       saveMuteId(target.getName().toLowerCase(), muteId);
 
       FileConfiguration config = Config.getConfig();
@@ -144,24 +138,24 @@ public class MuteCommand implements ICommandAPI {
                  config.getString(ConfigCommandPath.MUTE_PLAYER_MUTED)
                          .replace("%duration%", durationFormatted)
                          .replace("%reason%", reason)
-                         .replace("%mute_id%", muteId)));
+                 ));
 
          sender.sendMessage(ColorUtils.translateColorCodes(
                  config.getString(ConfigCommandPath.MUTE_SUCCESS)
                          .replace("%player%", target.getName())
                          .replace("%duration%", durationFormatted)
-                         .replace("%mute_id%", muteId)));
+         ));
       } else {
          mutedPlayers.put(target.getUniqueId(), null);
          target.sendMessage(ColorUtils.translateColorCodes(
                  config.getString(ConfigCommandPath.MUTE_PLAYER_MUTED_PERMANENT)
                          .replace("%reason%", reason)
-                         .replace("%mute_id%", muteId)));
+                 ));
 
          sender.sendMessage(ColorUtils.translateColorCodes(
                  config.getString(ConfigCommandPath.MUTE_SUCCESS_PERMANENT)
                          .replace("%player%", target.getName())
-                         .replace("%mute_id%", muteId)));
+            ));
       }
 
       muteReasons.put(target.getUniqueId(), reason);
@@ -180,13 +174,11 @@ public class MuteCommand implements ICommandAPI {
    private void loadMuteIds() {
       if (Config.getConfig().isConfigurationSection("muteIds")) {
          for (String playerName : Config.getConfig().getConfigurationSection("muteIds").getKeys(false)) {
-            muteIds.put(playerName, Config.getConfig().getString("muteIds." + playerName));
          }
       }
    }
 
    private void removeMuteId(String playerName) {
-      muteIds.remove(playerName.toLowerCase());
       Config.getConfig().set("muteIds." + playerName.toLowerCase(), null);
       Config.save();
    }
@@ -215,7 +207,7 @@ public class MuteCommand implements ICommandAPI {
                       .replace("%player%", target.getName())
                       .replace("%muter%", sender instanceof Player ? sender.getName() : "Console")
                       .replace("%reason%", reason)
-                      .replace("%mute_id%", getMuteId(target.getName())));
+        );
 
       for (Player player : Bukkit.getOnlinePlayers()) {
          if (player.hasPermission(PERMISSION_MUTE) && player != sender && player != target) {
@@ -282,14 +274,11 @@ public class MuteCommand implements ICommandAPI {
       return muteReasons.getOrDefault(playerUUID, "No reason specified");
    }
 
-   public static String getMuteId(String playerName) {
-      return muteIds.getOrDefault(playerName.toLowerCase(), "N/A");
-   }
+
 
    public static void unmute(UUID playerUUID) {
       Player player = Bukkit.getPlayer(playerUUID);
       if (player != null) {
-         muteIds.remove(player.getName().toLowerCase());
          Config.getConfig().set("muteIds." + player.getName().toLowerCase(), null);
          Config.save();
       }
